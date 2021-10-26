@@ -18,11 +18,11 @@ public class Cart {
     @Setter(AccessLevel.NONE)
     private Long id;
 
-    @OneToOne(mappedBy = "shoppingCart")
-    private User user;
-
     @ElementCollection
     private List<String> cartItems;
+
+    @OneToOne
+    private User user;
 
     private double totalPrice = 0;
 

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css">
+
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <!-------------------- LOGIN --------------------------->
+        <div class="col-md-9" th:if="${method} == 'login'">
+            <div th:if="${param.error}" class="alert alert-danger">Incorrect username or password</div>
+            <th:block th:if="${param.logout}">
+                <div class="text-center  brush-script" style="color: #4fa36f">
+                    Successful logout
+                </div>
+            </th:block>
+            <form autocomplete="off" th:action="@{/login}" method="post">
+                <div class="form-group">
+                    <label for="loginUsername">* Username:</label>
+                    <input autofocus required="required" type="text" id="loginUsername" name="username" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">* Password: </label>
+                    <input required="required" type="password" class="form-control" id="loginPassword" name="password">
+                </div>
+                <button type="submit" class="btn btn-primary">Log in</button>
+                <a class="btn btn-outline-dark" href="/register">Register</a>
+            </form>
+        </div>
+
+        <!-------------------- REGISTER ------------------------>
+        <div class="col-md-9" th:if="${method} == 'register'">
+            <h1>Registration</h1>
+            <form autocomplete="off" th:action="@{/register}" method="post" th:object="${userForm}">
+                <div class="form-group">
+                    <label for="registerUsername">Username</label>
+                    <span class="alert alert-red" th:if="${usernameExists}">Username is already exists</span>
+                    <input required="required" type="text" id="registerUsername" name="username"  class="form-control" th:field="*{username}">
+<!--                    <small id="usernameHelp" th:each="error : ${#fields.errors('username')}" th:text="${error}">-->
+                    <small class="alert alert-danger" id="usernameHelp" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">
+                        Error Message
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Password</label>
+                    <input required="required" type="password" class="form-control" id="registerPassword" name="password" th:field="*{password}">
+                    <small id="passwordHelp" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">
+                        Error Message
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label for="registerConfirmPassword">Confirm Password</label>
+                    <input required="required" type="password" class="form-control" id="registerConfirmPassword" name="confirmPassword" th:field="*{confirmPassword}">
+                    <small id="confirmPasswordHelp" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}">
+                        Error Message
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <span class="alert alert-red" th:if="${emailExists}">Email is already exists</span>
+                    <input required="required" type="email" class="form-control" id="email" name="email" th:field="*{email}">
+                    <small id="emailHelp" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">
+                        Error Message
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label for="address">Shipping Address</label>
+                    <input required="required" type="text" class="form-control" id="address" name="address" th:field="*{address}">
+                    <small id="addressHelp" th:if="${#fields.hasErrors('address')}" th:errors="*{address}">
+                        Error Message
+                    </small>
+                </div>
+                <button type="submit" class="btn btn-outline-dark">Register</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

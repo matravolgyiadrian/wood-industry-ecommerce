@@ -39,14 +39,4 @@ public class ProductServiceImpl implements ProductService {
         productRepository.deleteById(id);
     }
 
-    @Override
-    public void updateName(Long id, String name) {
-        productRepository.setProductName(id, name);
-    }
-
-    @Override
-    public void updatePrice(Long id, double price) {
-        productRepository.setProductPrice(id, price);
-    }
-
 }

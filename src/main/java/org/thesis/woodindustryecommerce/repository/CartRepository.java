@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.thesis.woodindustryecommerce.model.Cart;
-import org.thesis.woodindustryecommerce.model.CartItem;
 
 @Repository
 public interface CartRepository extends JpaRepository<Cart, Long> {
