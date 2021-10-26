@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" >
 <head>
     <meta charset="UTF-8">
     <title>Ecommerce</title>
@@ -9,6 +9,17 @@
 <body>
 <h1>Ecommerce</h1>
 <div class="container-fluid">
+    <div sec:authorize="hasRole('ROLE_USER')">
+        <h2>HELLO <span sec:authentication="name"></span></h2>
+    </div>
+    <div sec:authorize="hasRole('ROLE_ADMIN')">
+        <h2 style="color:red;">HELLO <span sec:authentication="name"></span></h2>
+    </div>
+    <div class="row">
+        <div sec:authorize="hasRole('ROLE_ADMIN')" class="col-md-6"><a href="product/new" class="btn btn-outline-dark">New product</a></div>
+        <div class="col-md-6"><a href="login" class="btn btn-outline-dark">Login</a></div>
+        <div class="col-md-6"><a href="logout" class="btn btn-outline-dark">Logout</a></div>
+    </div>
     <div class="row">
         <div class="col-md-12">
             <h3>Products</h3>
@@ -19,6 +30,9 @@
                     <th>Name</th>
                     <th>Price</th>
                     <th></th>
+                    <th sec:authorize="hasRole('ROLE_ADMIN')"></th>
+                    <th sec:authorize="hasRole('ROLE_ADMIN')"></th>
+
                 </tr>
                 </thead>
                 <tbody>
@@ -26,6 +40,12 @@
                     <td th:text="${product.name}"></td>
                     <td th:text="${product.price}"></td>
                     <td><a class="btn btn-outline-dark">Add to cart</a></td>
+                    <td sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="${'product/edit/'+ product.getId()}" class="btn btn-outline-dark">Edit item</a></td>
+                    <td sec:authorize="hasRole('ROLE_ADMIN')">
+                        <form th:action="${'product/delete/' + product.getId()}" method="post">
+                            <input class="btn btn-outline-dark" type="submit" value="Delete">
+                        </form>
+                    </td>
                 </tr>
                 </tbody>
             </table>
