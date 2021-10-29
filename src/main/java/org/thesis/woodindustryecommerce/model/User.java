@@ -36,9 +36,6 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private Set<Role> authorities;
 
-    @OneToOne
-    private Cart cart;
-
     public User(Set<Role> roles) {
         this.authorities = roles;
     }
