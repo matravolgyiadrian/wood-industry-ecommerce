@@ -58,9 +58,7 @@ public class UserController {
             return "login";
         }
 
-//        if(!userForm.getPassword().equals(userForm.getConfirmPassword()) || bindingResult.hasErrors()){
         if (bindingResult.hasErrors()) {
-//            model.addAttribute("userForm", userForm);
             model.addAttribute("method", "register");
             return "login";
         }

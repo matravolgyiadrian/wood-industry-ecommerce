@@ -1,6 +1,5 @@
 package org.thesis.woodindustryecommerce;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -8,7 +7,6 @@ import org.springframework.stereotype.Component;
 import org.thesis.woodindustryecommerce.model.Product;
 import org.thesis.woodindustryecommerce.model.Role;
 import org.thesis.woodindustryecommerce.model.User;
-import org.thesis.woodindustryecommerce.repository.CartRepository;
 import org.thesis.woodindustryecommerce.repository.ProductRepository;
 import org.thesis.woodindustryecommerce.repository.RoleRepository;
 import org.thesis.woodindustryecommerce.repository.UserRepository;
@@ -16,22 +14,19 @@ import org.thesis.woodindustryecommerce.repository.UserRepository;
 import javax.annotation.PostConstruct;
 import java.util.Set;
 
-@Slf4j
 @Component
 @Profile("!test")
 public class DBSeeder {
 
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
-    private final CartRepository cartRepository;
     private final RoleRepository roleRepository;
     private final BCryptPasswordEncoder encoder;
 
     @Autowired
-    public DBSeeder(ProductRepository productRepository, UserRepository userRepository, CartRepository cartRepository, RoleRepository roleRepository) {
+    public DBSeeder(ProductRepository productRepository, UserRepository userRepository, RoleRepository roleRepository) {
         this.productRepository = productRepository;
         this.userRepository = userRepository;
-        this.cartRepository = cartRepository;
         this.roleRepository = roleRepository;
         this.encoder = new BCryptPasswordEncoder();
     }
