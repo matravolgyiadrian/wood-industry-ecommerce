@@ -16,9 +16,13 @@
         <h2 style="color:red;">HELLO <span sec:authentication="name"></span></h2>
     </div>
     <div class="row">
-        <div sec:authorize="hasRole('ROLE_ADMIN')" class="col-md-6"><a href="product/new" class="btn btn-outline-dark">New product</a></div>
-        <div class="col-md-6"><a href="login" class="btn btn-outline-dark">Login</a></div>
-        <div class="col-md-6"><a href="logout" class="btn btn-outline-dark">Logout</a></div>
+        <div sec:authorize="hasRole('ROLE_ADMIN')" class="col"><a href="/product/new" class="btn btn-outline-dark">New product</a></div>
+        <div sec:authorize="hasRole('ROLE_ADMIN')" class="col"><a href="/coupon/all" class="btn btn-outline-dark">Coupons</a></div>
+        <div class="col"><a href="login" class="btn btn-outline-dark">Login</a></div>
+        <div class="col"><a href="logout" class="btn btn-outline-dark">Logout</a></div>
+        <div class="col"><a href="/cart/details" class="btn btn-outline-dark">Check Cart</a></div>
+        <div class="col"><a href="/order/my" class="btn btn-outline-dark">My Orders</a></div>
+        <div sec:authorize="hasRole('ROLE_ADMIN')" class="col"><a href="/order/all" class="btn btn-outline-dark">All Orders</a></div>
     </div>
     <div class="row">
         <div class="col-md-12">
@@ -29,6 +33,7 @@
                 <tr>
                     <th>Name</th>
                     <th>Price</th>
+                    <th>Stock</th>
                     <th></th>
                     <th sec:authorize="hasRole('ROLE_ADMIN')"></th>
                     <th sec:authorize="hasRole('ROLE_ADMIN')"></th>
@@ -39,7 +44,14 @@
                 <tr th:each="product: ${products}">
                     <td th:text="${product.name}"></td>
                     <td th:text="${product.price}"></td>
-                    <td><a class="btn btn-outline-dark">Add to cart</a></td>
+                    <td th:text="${product.stock}"></td>
+                    <td>
+                        <form th:action="@{/cart/add}" method="post" autocomplete="off">
+                            <input type="hidden" name="id" th:value="${product.id}">
+                            <input class="form-control" name="quantity" type="number" min="0" step="1">
+                            <input class="btn btn-outline-dark" type="submit" value="Add to cart">
+                        </form>
+                    </td>
                     <td sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="${'product/edit/'+ product.getId()}" class="btn btn-outline-dark">Edit item</a></td>
                     <td sec:authorize="hasRole('ROLE_ADMIN')">
                         <form th:action="${'product/delete/' + product.getId()}" method="post">
