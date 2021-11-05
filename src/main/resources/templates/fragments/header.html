@@ -1,0 +1,73 @@
+<header xmlns:th="http://www.thymeleaf.org"
+        lang="en">
+    <div class="fixed-top w-100 d-flex align-items-center" style="background-color: #213d36; height: 3.5rem;">
+        <button class="btn " type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu"
+                aria-controls="offcanvasMenu">
+            <div>
+                <div class="hamburger"></div>
+                <div class="hamburger"></div>
+                <div class="hamburger"></div>
+            </div>
+        </button>
+        <h1 class="text-white text-center w-100">
+            <a class="unstyled-link" href="/home">
+                <span style="cursor: pointer;"> Ecommerce</span>
+            </a>
+        </h1>
+        <button onclick="location.href='/cart/details'" class="cart-icon position-relative">
+            <i class="fas fa-shopping-cart fa-2x text-white pe-4"></i>
+            <span th:text="${session.shopping_cart?.size()} ?: 0" class="badge badge-danger position-absolute"></span>
+        </button>
+    </div>
+
+
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel"
+         style="width: 16rem; background-color: #213d36;">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title text-white" id="offcanvasMenuLabel">Menu</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <ul class="list-unstyled">
+                <li class="menu-label">
+                    <p>Browse our pages</p>
+                </li>
+                <li class="menu-item">
+                    <a class="unstyled-link" href="/home">Home</a>
+                </li>
+                <li class="menu-item">
+                    <a class="unstyled-link" href="/about">About Us</a>
+                </li>
+                <li class="menu-label">
+                    <p>Account</p>
+                </li>
+                <li sec:authorize="isAuthenticated()" class="menu-item">
+                    <a class="unstyled-link" href="/user-details">My Account</a>
+                </li>
+                <li sec:authorize="isAnonymous()" class="menu-item">
+                    <a class="unstyled-link" href="/login">Log in</a>
+                </li>
+                <li sec:authorize="isAnonymous()" class="menu-item">
+                    <a class="unstyled-link" href="/register">Register</a>
+                </li>
+                <li sec:authorize="isAuthenticated()" class="menu-item">
+                    <a class="unstyled-link" href="/logout">Log out</a>
+                </li>
+                <div sec:authorize="hasRole('ROLE_ADMIN')">
+                    <li class="menu-label">
+                        Admin
+                    </li>
+                    <li class="menu-item">
+                        <a class="unstyled-link" href="/order/all">Orders</a>
+                    </li>
+                    <li class="menu-item">
+                        <a class="unstyled-link" href="/product/all">Products</a>
+                    </li>
+                    <li class="menu-item">
+                        <a class="unstyled-link" href="/coupon/all">Coupons</a>
+                    </li>
+                </div>
+            </ul>
+        </div>
+    </div>
+</header>
