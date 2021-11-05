@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<th:block>
+    <div th:replace="fragments/head.html :: head"></div>
+</th:block>
+<th:block>
+    <div th:replace="fragments/header.html :: div"></div>
+</th:block>
+
+<body style="background-color: #f7f9fb;">
+<div class="container vh-100">
+    <div class="row align-items-center justify-content-md-center h-100">
+        <div class="card shadow p-2" style="width: 400px;">
+            <div class="card-body">
+                <h4 class="card-title mb-4">Register</h4>
+                <div th:if="${usernameExists}" class="alert alert-danger">Username is already exists</div>
+                <div th:if="${emailExists}" class="alert alert-danger">Email is already used</div>
+                <form autocomplete="off" th:action="@{/register}" method="post" th:object="${userForm}">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input id="name" type="text" class="form-control" minlength="5" name="name" th:field="*{name}" required autofocus>
+                    </div>
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input id="username" type="text" class="form-control" minlength="3" name="username" th:field="*{username}" required autofocus>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="input-group" id="show_hide_password">
+                            <input id="password" type="password" class="form-control" minlength="6" name="password" th:field="*{password}" required>
+                            <div class="input-group-append">
+                                            <span class="input-group-text h-100">
+                                            <a href=""><i class="fa fa-eye-slash" aria-hidden="true" style="color: #333;"></i></a>
+                                            </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input id="email" type="email" class="form-control" name="email" th:field="*{email}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Address</label>
+                        <input id="address" type="text" class="form-control" minlength="5" name="address" th:field="*{address}" required>
+                    </div>
+                    <div class="form-group mt-5">
+                        <button type="submit" class="btn btn-primary btn-block w-100 p-2">
+                            Register
+                        </button>
+                    </div>
+                    <div class="mt-4 text-center">
+                        Already have an account? <a href="/login">Login</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:src="@{/js/login.js}"></script>
+</body>
+</html>
