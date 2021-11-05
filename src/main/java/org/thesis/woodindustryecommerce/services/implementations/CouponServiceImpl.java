@@ -31,7 +31,7 @@ public class CouponServiceImpl implements CouponService {
 
     @Override
     public Coupon findByCouponCode(String code) {
-        return couponRepository.findByCouponCode(code);
+        return couponRepository.findByCouponCode(code.toUpperCase());
     }
 
     @Override
@@ -42,5 +42,14 @@ public class CouponServiceImpl implements CouponService {
     @Override
     public void delete(Long id) {
         couponRepository.deleteById(id);
+    }
+
+    @Override
+    public Coupon validate(String code) {
+        Coupon coupon = this.findByCouponCode(code.toUpperCase());
+        if(coupon != null){
+            return coupon;
+        }
+        return Coupon.builder().discountAmount(0).build();
     }
 }

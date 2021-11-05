@@ -22,7 +22,10 @@ public class Coupon {
     @Column(nullable = false)
     private int discountAmount;
 
-    public double getMultiplier() {
+    public double getDiscountMultiplier() {
         return 1D - (double) discountAmount / 100D;
+    }
+    public double getMultiplier() {
+        return (double) discountAmount / 100D;
     }
 }

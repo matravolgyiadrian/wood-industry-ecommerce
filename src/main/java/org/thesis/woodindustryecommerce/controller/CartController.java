@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.thesis.woodindustryecommerce.model.*;
+import org.thesis.woodindustryecommerce.model.binding.Billing;
 import org.thesis.woodindustryecommerce.services.CouponService;
 import org.thesis.woodindustryecommerce.services.OrderService;
 import org.thesis.woodindustryecommerce.services.ProductService;
@@ -59,39 +60,91 @@ public class CartController {
     @GetMapping("/cart/details")
     public String cartDetails(Model model, HttpSession session) {
         model.addAttribute("total_price", calculateTotalPrice(getCart(session)));
-
+        model.addAttribute("discountPercentage", 0);
+        model.addAttribute("discountMultiplier", 1);
 
         return "cart";
     }
 
-    @PostMapping("/cart/checkout")
-    public String checkout(Model model, HttpSession session, Principal principal, String couponCode) {
+
+    @PostMapping("/cart/validate-coupon")
+    public String validate(Model model, String couponCode, HttpSession session, Principal principal){
+        Coupon coupon = couponService.findByCouponCode(couponCode);
+
+        if(coupon == null){
+            model.addAttribute("discountPercentage", 0);
+            model.addAttribute("discountMultiplier", 1);
+        } else{
+            model.addAttribute("discountPercentage", coupon.getDiscountAmount() != 0 ? coupon.getDiscountAmount() : 0);
+            model.addAttribute("discountMultiplier", coupon.getMultiplier() != 1 ? coupon.getDiscountMultiplier() : 1);
+            model.addAttribute("coupon_code", coupon.getCouponCode());
+
+        }
+
+        model.addAttribute("total_price", calculateTotalPrice(getCart(session)));
+        model.addAttribute("billingForm", new Billing());
+        if(principal!= null){
+            model.addAttribute("user", userService.findByUsername(principal.getName()));
+        } else{
+            model.addAttribute("user", new User());
+        }
+        return "checkout";
+    }
+
+    @GetMapping("/cart/checkout")
+    public String checkout(Model model, HttpSession session, Principal principal){
         List<CartItem> cart = getCart(session);
 
         if (cart.isEmpty()) {
             model.addAttribute("emptyCart", true);
+            model.addAttribute("total_price", calculateTotalPrice(getCart(session)));
+            model.addAttribute("discountPercentage", 0);
+            model.addAttribute("discountMultiplier", 1);
+
             return "cart";
         }
-        User customer = userService.findByUsername(principal.getName());
-        Order order = Order.builder()
-                .customer(customer)
-                .products(cart)
-                .totalPrice(calculateTotalPrice(cart))
-                //TODO may be a custom address
-                .shippingAddress(customer.getAddress())
-                .build();
+        model.addAttribute("total_price", calculateTotalPrice(getCart(session)));
+        model.addAttribute("discountPercentage", 0);
+        model.addAttribute("discountMultiplier", 1);
+        model.addAttribute("billingForm", new Billing());
+
+        if(principal != null){
+            model.addAttribute("user", userService.findByUsername(principal.getName()));
+        } else{
+            model.addAttribute("user", new User());
+        }
+
+        return "checkout";
+    }
+
+    @PostMapping("/cart/checkout")
+    public String checkout(Model model, HttpSession session, Principal principal, double discountMultiplier, Billing billingForm) {
+        //TODO send email about the order
+        List<CartItem> cart = getCart(session);
+
+        Order order = new Order();
+        order.setTotalPrice(calculateTotalPrice(cart));
+        order.setProducts(cart);
+        order.setShippingAddress(billingForm.getAddress());
+        User customer;
+        if(principal != null){
+            customer = userService.findByUsername(principal.getName());
+        } else {
+            customer = userService.createGuestUser(billingForm.getFullName(), billingForm.getEmail(), billingForm.getAddress());
+        }
+        order.setCustomer(customer);
 
         for (CartItem item : cart) {
             Product product = item.getProduct();
             product.setStock(product.getStock() - item.getQuantity());
+            //Reordered from the product TODO notice admin about the reorder
+            if(product.getStock() <= 10){
+                product.setStock(200);
+            }
             productService.save(product);
         }
 
-        log.info("coupon code: {}", couponCode);
-        Coupon coupon = couponService.findByCouponCode(couponCode.toUpperCase());
-        if (coupon != null) {
-            order.setTotalPrice(order.getTotalPrice() * coupon.getMultiplier());
-        }
+        order.setTotalPrice(order.getTotalPrice() * discountMultiplier);
 
         orderService.save(order);
 

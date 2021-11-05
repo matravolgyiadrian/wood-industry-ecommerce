@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" >
-<head>
-    <meta charset="UTF-8">
-    <title>Coupon</title>
+<th:block>
+    <div th:replace="fragments/head.html :: head"></div>
+</th:block>
+<th:block>
+    <div th:replace="fragments/header.html :: div"></div>
+</th:block>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css">
-</head>
 <body>
-<h1>Ecommerce</h1>
-<div class="container-fluid">
-    <a href="/home" class="btn btn-outline-dark">Back to home</a>
-    <a href="/coupon/new" class="btn btn-outline-dark">New Coupon</a>
+<div class="container-fluid" style="margin-top: 4rem;">
+    <a href="/coupon/new" class="btn btn-success">New Coupon</a>
 
     <div class="row">
         <div class="col-md-9">

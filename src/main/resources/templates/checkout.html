@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<th:block>
+  <div th:replace="fragments/head.html :: head"></div>
+</th:block>
+<th:block>
+  <div th:replace="fragments/header.html :: div"></div>
+</th:block>
+
+<body class="bg-light">
+<div class="container" style="margin-top: 4rem;">
+  <div class="row mt-5">
+    <div class="col-md-4 order-md-2 mb-4">
+      <h4 class="d-flex justify-content-between align-items-center mb-3">
+        <span class="text-muted">Your cart</span>
+        <span th:text="${session?.shopping_cart?.size()}" class="badge badge-pill badge-danger"></span>
+      </h4>
+      <ul class="list-group mb-3">
+        <li th:each="item : ${session.shopping_cart}" class="list-group-item d-flex justify-content-between">
+          <div>
+            <h6 th:text="${item.product.name}" class="my-0">Product name</h6>
+            <small th:text="'Qty: '+ ${item.quantity}" class="text-muted">Qty: 2</small>
+          </div>
+          <span th:text="${#numbers.formatDecimal(item.totalPrice, 1, 'DEFAULT', 2, 'DEFAULT')} + ' Ft'" class="text-muted">$12</span>
+        </li>
+
+        <li th:if="${discountPercentage != 0}" class="list-group-item d-flex justify-content-between bg-light">
+          <div class="text-success">
+            <h6 class="my-0">Coupon code</h6>
+            <small th:text="${coupon_code?:''}">EXAMPLECODE</small>
+          </div>
+          <span th:text="'- ' + ${#numbers.formatDecimal(total_price * discountPercentage/100, 1, 'DEFAULT', 2, 'DEFAULT')} + ' Ft'" class="text-success">-$5</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+          <span>Grand Total</span>
+          <strong th:text="${#numbers.formatDecimal(total_price * discountMultiplier, 1, 'DEFAULT', 2, 'DEFAULT')} + ' Ft'">$20</strong>
+        </li>
+      </ul>
+
+      <form class="card p-2" th:action="@{/cart/validate-coupon}" method="post">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="COUPON CODE" autocomplete="off" name="couponCode">
+          <div class="input-group-append">
+            <button type="submit" class="btn btn-secondary">Redeem</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="col-md-8 order-md-1">
+      <h4 class="mb-3">Billing address</h4>
+      <form method="post" th:action="@{/cart/checkout}">
+        <input type="hidden" name="discountMultiplier" th:value="${discountMultiplier}">
+        <div sec:authorize="isAuthenticated()" class="row">
+          <div class="mb-3">
+            <label for="loggedinName">Full name</label>
+            <input type="text" class="form-control" id="loggedinName" name="name" th:field="${user.name}" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="loggedinEmail">Email</label>
+            <input type="email" class="form-control" id="loggedinEmail" placeholder="you@example.com" th:field="${user.email}" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="loggedinAddress">Address</label>
+            <input type="text" class="form-control" id="loggedinAddress" placeholder="1234 Main St" th:field="${user.address}" required>
+          </div>
+        </div>
+        <div sec:authorize="isAnonymous()" class="row">
+          <div class="mb-3">
+            <label for="name">Full name</label>
+            <input type="text" class="form-control" id="name" name="name" th:field="${billingForm.fullName}" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" placeholder="you@example.com" th:field="${billingForm.email}" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="address">Address</label>
+            <input type="text" class="form-control" id="address" placeholder="1234 Main St" th:field="${billingForm.address}" required>
+          </div>
+        </div>
+
+    <hr class="mb-4">
+
+    <h4 class="mb-3">Payment</h4>
+
+    <div class="d-block my-3">
+      <div class="custom-control custom-radio">
+        <input id="credit" name="paymentMethod" type="radio" value="credit" th:field="${billingForm.paymentType}" checked required>
+        <label for="credit">Credit card</label>
+      </div>
+      <div class="custom-control custom-radio">
+        <input id="debit" name="paymentMethod" type="radio" value="debit" th:field="${billingForm.paymentType}" required>
+        <label for="debit">Debit card</label>
+      </div>
+      <div class="custom-control custom-radio">
+        <input id="paypal" name="paymentMethod" type="radio" value="paypal" th:field="${billingForm.paymentType}" required>
+        <label for="paypal">PayPal</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label for="cc-name">Name on card</label>
+        <input type="text" class="form-control" id="cc-name" placeholder="" th:field="${billingForm.nameOnCard}" required>
+        <small class="text-muted">Full name as displayed on card</small>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label for="cc-number">Credit card number</label>
+        <input type="text" class="form-control" id="cc-number" placeholder="" th:field="${billingForm.creditCardNumber}" required>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3 mb-3">
+        <label for="cc-expiration">Expiration</label>
+        <input type="text" class="form-control" id="cc-expiration" placeholder="" th:field="${billingForm.exp}" required>
+      </div>
+      <div class="col-md-3 mb-3">
+        <label for="cc-cvv">CVV</label>
+        <input type="text" class="form-control" id="cc-cvv" placeholder="" th:field="${billingForm.cvv}" required>
+      </div>
+    </div>
+    <hr class="mb-4">
+    <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>
+    </form>
+  </div>
+</div>
+</div>
+</body>
+</html>
