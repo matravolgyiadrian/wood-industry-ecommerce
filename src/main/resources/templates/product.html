@@ -1,38 +1,80 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="UTF-8">
-  <title>Title</title>
+<th:block>
+    <div th:replace="fragments/head.html :: head"></div>
+</th:block>
+<th:block>
+    <div th:replace="fragments/header.html :: div"></div>
+</th:block>
 
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-</head>
 <body>
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-md-12">
-      <h3>
-        Add new product!
-      </h3>
-      <form role="form" autocomplete="off" method="post" th:object="${productForm}">
-        <div class="form-group">
-          <label for="productName">Name</label>
-          <input type="text" class="form-control" id="productName" th:field="*{name}" autofocus="true"/>
+<div class="container-fluid" style="margin-top: 4rem;">
+    <div class="row mt-3">
+        <div class="col-4">
+            <a class="btn btn-success" href="/product/new">New product
+            </a>
         </div>
-        <div class="form-group">
-          <label for="price">Price</label>
-          <input type="number" step="0.1" min=0 class="form-control" id="price" th:field="*{price}" />
-        </div>
-        <div class="form-group">
-          <label for="stock">Stock</label>
-          <input type="number" step="1" min=0 class="form-control" id="stock" th:field="*{stock}" />
-        </div>
-        <div class="form-group">
-          <input th:if="${method} == 'new'" type="submit" class="btn btn-outline-dark" th:action="@{/product/new}" th:value="Confirm">
-          <input th:if="${method} == 'edit'" type="submit" class="btn btn-outline-dark" th:action="@{/product/edit/{id}}" th:value="Edit">
-        </div>
-      </form>
+        <div class="col-4"><h2 class="text-center">Products</h2></div>
     </div>
-  </div>
+    <div th:if="${form}" class="row justify-content-center mb-4">
+        <div class="col-md-8">
+            <form class="row" role="form" autocomplete="off" method="post" th:object="${productForm}" enctype="multipart/form-data">
+                <div class="form-group col-md-12">
+                    <label for="productName">Name</label>
+                    <input type="text" class="form-control" id="productName" th:field="*{name}" autofocus="true" required/>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="price">Price</label>
+                    <input type="number" step="0.1" min=0 class="form-control" id="price" th:field="*{price}" required/>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="stock">Stock</label>
+                    <input type="number" step="1" min=0 class="form-control" id="stock" th:field="*{stock}" required/>
+                </div>
+                <div class="form-group">
+                    <label for="product-image" class="font-weight-bold">Image</label>
+                    <input type="file" class="form-control-file" id="product-image" accept="image/png, image/jpeg" name="image">
+                </div>
+                <div class="form-group">
+                    <input th:if="${method} == 'new'" type="submit" class="btn btn-outline-dark" th:action="@{/product/new}" th:value="Confirm">
+                    <input th:if="${method} == 'edit'" type="submit" class="btn btn-outline-dark" th:action="@{/product/edit/{id}}" th:value="Edit">
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div th:unless="${!products.isEmpty() and products != null}" class="alert alert-info">There are no products yet</div>
+        <div th:if="${!products.isEmpty() and products != null}">
+            <table class="table table-light">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="product: ${products}">
+                    <td th:text="${product.name}">5</td>
+                    <td th:text="${product.price}">112</td>
+                    <td th:text="${product.stock}">30</td>
+                    <td>
+                        <a th:href="${'/product/edit/' + product.getId()}" class="btn btn-primary" th:text="Edit"></a>
+                    </td>
+                    <td>
+                        <form class="m-auto" style="width: min-content;"
+                              th:action="${'/product/delete/' + product.getId()}" method="post">
+                            <input class="btn btn-danger" type="submit" value="Delete">
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
 </div>
 </body>
 </html>
