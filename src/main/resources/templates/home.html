@@ -1,66 +1,53 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" >
-<head>
-    <meta charset="UTF-8">
-    <title>Ecommerce</title>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<th:block>
+    <div th:replace="fragments/head.html :: head"></div>
+</th:block>
+<th:block>
+    <div th:replace="fragments/header.html :: div"></div>
+</th:block>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css">
-</head>
 <body>
 <h1>Ecommerce</h1>
-<div class="container-fluid">
-    <div sec:authorize="hasRole('ROLE_USER')">
-        <h2>HELLO <span sec:authentication="name"></span></h2>
-    </div>
-    <div sec:authorize="hasRole('ROLE_ADMIN')">
-        <h2 style="color:red;">HELLO <span sec:authentication="name"></span></h2>
-    </div>
+<div class="container-fluid" style="margin-top: 4rem;">
     <div class="row">
-        <div sec:authorize="hasRole('ROLE_ADMIN')" class="col"><a href="/product/new" class="btn btn-outline-dark">New product</a></div>
-        <div sec:authorize="hasRole('ROLE_ADMIN')" class="col"><a href="/coupon/all" class="btn btn-outline-dark">Coupons</a></div>
-        <div class="col"><a href="login" class="btn btn-outline-dark">Login</a></div>
-        <div class="col"><a href="logout" class="btn btn-outline-dark">Logout</a></div>
-        <div class="col"><a href="/cart/details" class="btn btn-outline-dark">Check Cart</a></div>
-        <div class="col"><a href="/order/my" class="btn btn-outline-dark">My Orders</a></div>
-        <div sec:authorize="hasRole('ROLE_ADMIN')" class="col"><a href="/order/all" class="btn btn-outline-dark">All Orders</a></div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
+        <div class="col-12">
             <h3>Products</h3>
-            <div class="alert alert-info" th:unless="${products != null and !products.empty}" >There is no product</div>
-            <table class="table" th:if="${products != null and !products.empty}">
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Price</th>
-                    <th>Stock</th>
-                    <th></th>
-                    <th sec:authorize="hasRole('ROLE_ADMIN')"></th>
-                    <th sec:authorize="hasRole('ROLE_ADMIN')"></th>
+            <div class="alert alert-info" th:unless="${products != null and !products.empty}">There is no product</div>
+            <div class="product row g-0">
+                <div th:each="product: ${products}" class="card shadow col-3">
+                    <img th:src="${product.imageUrl}}"
+                         class="card-img-top" alt="...">
+                    <div class="card-body text-center">
+                        <h5 class="card-title" th:text="${product.name}"></h5>
+                        <p th:if="${product.stock > 0}" class="mt-5"><span style="background-color: green;"
+                                                                           class="indicator"></span> In Stock</p>
+                        <p th:unless="${product.stock > 0}" class="mt-5"><span style="background-color: red;"
+                                                                               class="indicator"></span> Out of Stock
+                        </p>
+                    </div>
 
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="product: ${products}">
-                    <td th:text="${product.name}"></td>
-                    <td th:text="${product.price}"></td>
-                    <td th:text="${product.stock}"></td>
-                    <td>
-                        <form th:action="@{/cart/add}" method="post" autocomplete="off">
-                            <input type="hidden" name="id" th:value="${product.id}">
-                            <input class="form-control" name="quantity" type="number" min="0" step="1">
-                            <input class="btn btn-outline-dark" type="submit" value="Add to cart">
-                        </form>
-                    </td>
-                    <td sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="${'product/edit/'+ product.getId()}" class="btn btn-outline-dark">Edit item</a></td>
-                    <td sec:authorize="hasRole('ROLE_ADMIN')">
-                        <form th:action="${'product/delete/' + product.getId()}" method="post">
-                            <input class="btn btn-outline-dark" type="submit" value="Delete">
-                        </form>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+
+                    <form th:action="@{/cart/add}" method="post" autocomplete="off" class="cart-wrapper">
+                        <input type="hidden" name="id" th:value="${product.id}">
+                        <input class="form-control" name="quantity" type="hidden" th:value="1">
+
+                        <div class="">
+                            <div class="h-bg">
+                                <div class="h-bg-inner"></div>
+                            </div>
+                            <button class="cart" type="submit"
+                                    style="border: none; padding: 0; font: inherit; outline:inherit; cursor: pointer; background: none;">
+                                <span th:text="${#numbers.formatDecimal(product.price, 1, 'DEFAULT', 2, 'DEFAULT')} + ' Ft'"
+                                      class="price"> Ft</span>
+                                <span class="add-to-cart">
+                          <span class="txt">Add to cart</span>
+                        </span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </div>
