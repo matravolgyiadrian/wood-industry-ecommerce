@@ -12,6 +12,8 @@ public interface UserService {
     User findByEmail(String email);
     User findById(Long id);
     User createUser(User user, String userRoleStr);
+    User createGuestUser(String name, String email, String address);
+    User editUser(User user);
     User save(User user);
     void delete(Long id);
 }

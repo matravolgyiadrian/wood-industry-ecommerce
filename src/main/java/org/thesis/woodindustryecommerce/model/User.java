@@ -18,6 +18,9 @@ public class User implements UserDetails {
     @Setter(AccessLevel.NONE)
     private Long id;
 
+    @Column(nullable = false)
+    private String name;
+
     @Column(nullable = false, unique = true)
     private String username;
 

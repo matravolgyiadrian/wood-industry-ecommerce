@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<th:block>
+  <div th:replace="fragments/head.html :: head"></div>
+</th:block>
+<th:block>
+  <div th:replace="fragments/header.html :: div"></div>
+</th:block>
+
+<body style="margin-top: 4rem">
+<a href="/user/edit" class="btn btn-primary position-absolute" style="top: 4em; right: 1em;">Edit Profile</a>
+<div class="jumbotron mt-3 bg-re text-center w-50 m-auto">
+  <figure>
+    <i class="fa fa-user fa-5x" aria-hidden="true"></i>
+  </figure>
+  <h3 class="d-inline-block mr-2">Username: </h3>
+  <h3 class="d-inline-block" th:text="${user.username}"></h3>
+  <hr color="white"/>
+  <div class="row">
+    <div class="col-md-6">
+      <h5>Email:</h5>
+    </div>
+    <div class="col-md-6">
+      <h5 th:text="${user.email}"></h5>
+    </div>
+  </div>
+  <hr color="white"/>
+  <div class="row">
+    <div class="col-md-6">
+      <h5 >Shipping Address:</h5>
+    </div>
+    <div class="col-md-6">
+      <h5 th:text="${user.address}"></h5>
+    </div>
+  </div>
+  <hr color="white"/>
+</div>
+
+<button data-bs-toggle="collapse" data-bs-target="#order-list" aria-expanded="false" aria-controls="order-list" class="btn btn-outline-dark m-4">
+  Check Orders
+</button>
+<div class="row collapse collapse-horizontal m-4" id="order-list">
+  <div th:unless="${orders ne null and !orders.isEmpty()}" class="alert alert-info">There are no orders yet
+  </div>
+  <table class="table" th:if="${orders ne null and !orders.isEmpty()}">
+    <thead>
+    <tr>
+      <th>Products</th>
+      <th>Issued on</th>
+      <th>Shipping Address</th>
+      <th>Total Price</th>
+      <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="order: ${orders}">
+      <td>
+        <ul class="list-unstyled">
+          <li th:each="item: ${order.getProducts()}"
+              th:text="${item.getProduct().getName() + ' x ' + item.quantity}"></li>
+        </ul>
+      </td>
+      <td th:text="${#dates.format(order.getIssuedOn(), 'yyyy-MM-dd HH:mm')}"></td>
+      <td th:text="${order.getShippingAddress}"></td>
+      <td th:text="${order.getTotalPrice()}"></td>
+      <td th:text="${order.getStatus()}"></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>
