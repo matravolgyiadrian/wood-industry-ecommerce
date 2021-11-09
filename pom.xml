@@ -14,7 +14,7 @@
 	<name>wood-industry-ecommerce</name>
 	<description>An e-commerce web application for thesis.</description>
 	<properties>
-		<java.version>11</java.version>
+		<java.version>11.0.13</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
