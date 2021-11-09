@@ -13,6 +13,10 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>wood-industry-ecommerce</name>
 	<description>An e-commerce web application for thesis.</description>
+	<properties>
+		<maven.compiler.source>11.0.13</maven.compiler.source>
+		<maven.compiler.target>11.0.13</maven.compiler.target>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -96,14 +100,6 @@
 						<goals><goal>copy-dependencies</goal></goals>
 					</execution>
 				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>11.0.13</source>
-					<target>11.0.13</target>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
