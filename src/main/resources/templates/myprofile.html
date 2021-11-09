@@ -60,7 +60,7 @@
               th:text="${item.getProduct().getName() + ' x ' + item.quantity}"></li>
         </ul>
       </td>
-      <td th:text="${#dates.format(order.getIssuedOn(), 'yyyy-MM-dd HH:mm')}"></td>
+      <td th:text="${#temporals.format(order.getIssuedOn(), 'yyyy-MM-dd HH:mm')}"></td>
       <td th:text="${order.getShippingAddress}"></td>
       <td th:text="${order.getTotalPrice()}"></td>
       <td th:text="${order.getStatus()}"></td>

@@ -53,7 +53,7 @@
         <div sec:authorize="isAuthenticated()" class="row">
           <div class="mb-3">
             <label for="loggedinName">Full name</label>
-            <input type="text" class="form-control" id="loggedinName" name="name" th:field="${user.name}" required>
+            <input type="text" class="form-control" id="loggedinName" placeholder="Jon Doe" name="name" th:field="${user.name}" required>
           </div>
 
           <div class="mb-3">

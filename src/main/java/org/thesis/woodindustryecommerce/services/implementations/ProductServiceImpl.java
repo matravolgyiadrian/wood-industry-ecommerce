@@ -1,27 +1,31 @@
 package org.thesis.woodindustryecommerce.services.implementations;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.thesis.woodindustryecommerce.model.Product;
 import org.thesis.woodindustryecommerce.repository.ProductRepository;
-import org.thesis.woodindustryecommerce.services.CloudinaryService;
 import org.thesis.woodindustryecommerce.services.ProductService;
 
 @Service
+@Slf4j
 public class ProductServiceImpl implements ProductService {
 
+    private final AtomicInteger counter = new AtomicInteger();
     private final ProductRepository productRepository;
-    private final CloudinaryService cloudinaryService;
 
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository, CloudinaryService cloudinaryService){
+    public ProductServiceImpl(ProductRepository productRepository){
         this.productRepository = productRepository;
-        this.cloudinaryService = cloudinaryService;
     }
 
     @Override
@@ -36,17 +40,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product save(Product product) {
-        return productRepository.save(product);
-    }
+        Product savedProduct = productRepository.save(product);
+        saveImage(savedProduct.getImage(), savedProduct.getId());
 
-    @Override
-    public Product save(Product product, MultipartFile image) throws IOException {
-        if(image.isEmpty()){
-            product.setImageUrl("https://thumbs.dreamstime.com/b/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132482953.jpg");
-        } else{
-            product.setImageUrl(cloudinaryService.uploadImage(image));
-        }
-        return productRepository.save(product);
+        return savedProduct;
     }
 
     @Override
@@ -54,4 +51,15 @@ public class ProductServiceImpl implements ProductService {
         productRepository.deleteById(id);
     }
 
+    private void saveImage(MultipartFile image, Long id){
+        if(image != null && !image.isEmpty()){
+            Path path = Paths.get("product-photos/" + id + ".jpg");
+
+            try{
+                image.transferTo(new File(path.toString()));
+            } catch (IllegalStateException | IOException e){
+                e.printStackTrace();
+            }
+        }
+    }
 }

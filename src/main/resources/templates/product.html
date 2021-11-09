@@ -31,9 +31,9 @@
                     <label for="stock">Stock</label>
                     <input type="number" step="1" min=0 class="form-control" id="stock" th:field="*{stock}" required/>
                 </div>
-                <div class="form-group">
+                <div class="form-group mt-2 mb-2">
                     <label for="product-image" class="font-weight-bold">Image</label>
-                    <input type="file" class="form-control-file" id="product-image" accept="image/png, image/jpeg" name="image">
+                    <input type="file" class="form-control-file" id="product-image" accept="image/png, image/jpeg" th:field="*{image}" name="image">
                 </div>
                 <div class="form-group">
                     <input th:if="${method} == 'new'" type="submit" class="btn btn-outline-dark" th:action="@{/product/new}" th:value="Confirm">

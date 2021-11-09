@@ -12,7 +12,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.thesis.woodindustryecommerce.model.Product;
 import org.thesis.woodindustryecommerce.services.ProductService;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Slf4j
 @Controller
@@ -44,9 +47,10 @@ public class ProductController {
     }
 
     @PostMapping("/product/new")
-    public String newProduct(@ModelAttribute  Product productForm, MultipartFile image) throws IOException {
-        productService.save(productForm, image);
+    public String newProduct(@ModelAttribute  Product productForm){
+
         log.debug("Product with name: {} has been successfully created", productForm.getName());
+        Product savedProduct = productService.save(productForm);
 
         return "redirect:/product/all";
     }
@@ -66,15 +70,10 @@ public class ProductController {
     }
 
     @PostMapping("/product/edit/{id}")
-    public String editProduct(@PathVariable Long id, @ModelAttribute Product productForm, MultipartFile image) throws IOException {
-
-        Product newProduct = new Product(id, productForm.getName(), productForm.getPrice(), productForm.getStock(), "");
-        if(image.isEmpty()){
-            newProduct.setImageUrl(productForm.getImageUrl());
-            productService.save(newProduct);
-        } else{
-            productService.save(newProduct, image);
-        }
+    public String editProduct(@PathVariable Long id, @ModelAttribute Product productForm){
+        log.info("imageUrl: {}", productForm.getImage());
+        Product newProduct = new Product(id, productForm.getName(), productForm.getPrice(), productForm.getStock(), productForm.getImage());
+        productService.save(newProduct);
         return "redirect:/product/all";
     }
 
@@ -86,5 +85,4 @@ public class ProductController {
 
         return "redirect:/product/all";
     }
-
 }

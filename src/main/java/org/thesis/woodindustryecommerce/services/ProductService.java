@@ -12,6 +12,5 @@ public interface ProductService {
     List<Product> findAll();
     Product findById(Long id);
     Product save(Product product);
-    Product save(Product product, MultipartFile image) throws IOException;
     void delete(Long id);
 }
