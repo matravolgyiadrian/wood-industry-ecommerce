@@ -1,10 +1,13 @@
 package org.thesis.woodindustryecommerce;
 
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Role;
 
 @SpringBootApplication
+@Role(BeanDefinition.ROLE_INFRASTRUCTURE)
 @ComponentScan(basePackages = {"org.thesis.woodindustryecommerce"})
 public class WoodIndustryEcommerceApplication {
 
