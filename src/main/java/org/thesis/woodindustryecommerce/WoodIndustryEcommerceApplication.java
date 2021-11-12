@@ -7,7 +7,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Role;
 
 @SpringBootApplication
-@Role(BeanDefinition.ROLE_INFRASTRUCTURE)
 @ComponentScan(basePackages = {"org.thesis.woodindustryecommerce"})
 public class WoodIndustryEcommerceApplication {
 
