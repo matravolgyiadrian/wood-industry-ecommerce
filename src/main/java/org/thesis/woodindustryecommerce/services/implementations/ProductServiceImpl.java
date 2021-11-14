@@ -43,6 +43,8 @@ public class ProductServiceImpl implements ProductService {
         Product savedProduct = productRepository.save(product);
         saveImage(savedProduct.getImage(), savedProduct.getId());
 
+        log.info("saved product image: {}", savedProduct.getImage());
+
         return savedProduct;
     }
 
@@ -53,7 +55,14 @@ public class ProductServiceImpl implements ProductService {
 
     private void saveImage(MultipartFile image, Long id){
         if(image != null && !image.isEmpty()){
+            File dir = new File("product-photos");
+            if(! dir.exists()){
+                dir.mkdir();
+            }
             Path path = Paths.get("product-photos/" + id + ".jpg");
+
+            log.info("Path to save the image: {}", path);
+            log.info("Path to save the image in string: {}", path.toString());
 
             try{
                 image.transferTo(new File(path.toString()));
