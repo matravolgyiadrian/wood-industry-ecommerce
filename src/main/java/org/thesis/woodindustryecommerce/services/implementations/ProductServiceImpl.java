@@ -44,8 +44,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product save(Product product) {
         String url = cloudinaryService.uploadFile(product.getImage());
-        product.setImageUrl(url);
-        log.info("saved product image: {}", url);
+        if(!url.equals("")){
+            product.setImageUrl(url);
+        }
 
         return productRepository.save(product);
     }
