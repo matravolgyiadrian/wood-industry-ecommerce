@@ -7,7 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {"org.thesis.woodindustryecommerce"})
-public class WoodIndustryEcommerceApplication extends SpringBootServletInitializer {
+public class WoodIndustryEcommerceApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(WoodIndustryEcommerceApplication.class, args);
