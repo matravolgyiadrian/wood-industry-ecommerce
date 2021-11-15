@@ -26,7 +26,7 @@
             <tbody>
             <tr th:each="item: ${session.shopping_cart}">
                 <td>
-                    <img style="width: 6rem; object-fit: cover;" th:src="/product-photos/${item.product.id}.jpg" class="card-img-top" alt="..." onerror="this.src='https://thumbs.dreamstime.com/b/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132482953.jpg'">
+                    <img style="width: 6rem; object-fit: cover;" th:src="${item.product.imageUrl}" class="card-img-top" alt="..." onerror="this.src='https://thumbs.dreamstime.com/b/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132482953.jpg'">
                 </td>
                 <td th:text="${item.product.name}"></td>
                 <td th:text="${#numbers.formatDecimal(item.product.price, 1, 'DEFAULT', 2, 'DEFAULT')} + ' Ft'"></td>

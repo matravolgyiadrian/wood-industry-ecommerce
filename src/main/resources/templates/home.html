@@ -16,7 +16,7 @@
             <div class="alert alert-info" th:unless="${products != null and !products.empty}">There is no product</div>
             <div class="product row g-0">
                 <div th:each="product: ${products}" class="card shadow col-3">
-                    <img th:src="'/product-photos/'+${product.id}+'.jpg'"
+                    <img th:src="${product.imageUrl}"
                          class="card-img-top" alt="..." onerror="this.src='https://thumbs.dreamstime.com/b/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132482953.jpg'">
                     <div class="card-body text-center">
                         <h5 class="card-title" th:text="${product.name}"></h5>

@@ -43,13 +43,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product save(Product product) {
-        Product savedProduct = productRepository.save(product);
-        String url = cloudinaryService.uploadFile(savedProduct.getImage());
-//        saveImage(savedProduct.getImage(), savedProduct.getId());
-
+        String url = cloudinaryService.uploadFile(product.getImage());
+        product.setImageUrl(url);
         log.info("saved product image: {}", url);
 
-        return savedProduct;
+        return productRepository.save(product);
     }
 
     @Override
@@ -57,22 +55,4 @@ public class ProductServiceImpl implements ProductService {
         productRepository.deleteById(id);
     }
 
-    private void saveImage(MultipartFile image, Long id){
-        if(image != null && !image.isEmpty()){
-            File dir = new File("product-photos");
-            if(! dir.exists()){
-                dir.mkdir();
-            }
-            Path path = Paths.get("product-photos/" + id + ".jpg");
-
-            log.info("Path to save the image: {}", path);
-            log.info("Path to save the image in string: {}", path.toString());
-
-            try{
-                image.transferTo(new File(path.toString()));
-            } catch (IllegalStateException | IOException e){
-                e.printStackTrace();
-            }
-        }
-    }
 }

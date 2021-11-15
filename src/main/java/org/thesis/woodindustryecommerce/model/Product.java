@@ -21,5 +21,6 @@ public class Product {
     private int stock;
     @Transient
     private MultipartFile image;
+    private String imageUrl;
 
 }
