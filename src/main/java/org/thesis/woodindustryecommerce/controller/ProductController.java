@@ -33,8 +33,6 @@ public class ProductController {
         model.addAttribute("products", productService.findAll());
         model.addAttribute("productForm", new Product());
 
-        log.info("HELLO PRODUCTS!");
-
         return "product";
     }
 

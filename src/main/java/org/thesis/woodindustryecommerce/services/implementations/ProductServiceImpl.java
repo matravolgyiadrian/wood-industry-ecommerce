@@ -20,11 +20,14 @@ import org.thesis.woodindustryecommerce.services.ProductService;
 @Slf4j
 public class ProductServiceImpl implements ProductService {
 
+    private final CloudinaryService cloudinaryService;
+
     private final AtomicInteger counter = new AtomicInteger();
     private final ProductRepository productRepository;
 
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository){
+    public ProductServiceImpl(CloudinaryService cloudinaryService, ProductRepository productRepository){
+        this.cloudinaryService = cloudinaryService;
         this.productRepository = productRepository;
     }
 
@@ -41,9 +44,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product save(Product product) {
         Product savedProduct = productRepository.save(product);
-        saveImage(savedProduct.getImage(), savedProduct.getId());
+        String url = cloudinaryService.uploadFile(savedProduct.getImage());
+//        saveImage(savedProduct.getImage(), savedProduct.getId());
 
-        log.info("saved product image: {}", savedProduct.getImage());
+        log.info("saved product image: {}", url);
 
         return savedProduct;
     }
