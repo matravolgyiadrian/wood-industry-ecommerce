@@ -96,6 +96,8 @@ public class UserServiceImpl implements UserService {
             localUser.setPassword(user.getPassword());
         }
 
+        log.info("the new user is: {}", localUser.toString());
+
         this.save(localUser);
 
         return localUser;
