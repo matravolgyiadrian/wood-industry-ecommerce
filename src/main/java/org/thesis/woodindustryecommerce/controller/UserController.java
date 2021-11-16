@@ -86,8 +86,10 @@ public class UserController {
         userToEdit.setUsername(principal.getName());
         log.info("User to edit form: {}", userToEdit.toString());
 
-        if (userService.findByEmail(userToEdit.getEmail()) != null) {
+        if (userService.findByEmail(userToEdit.getEmail()) != null && !userService.findByUsername(principal.getName()).getEmail().equals(userToEdit.getEmail())) {
             model.addAttribute("emailExists", true);
+            model.addAttribute("userToEdit", userService.findByUsername(principal.getName()));
+
             return "edit_user";
         }
 

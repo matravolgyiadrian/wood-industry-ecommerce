@@ -83,6 +83,19 @@ public class UserServiceImpl implements UserService {
     public User editUser(User user) {
         User localUser = userRepository.findByUsername(user.getUsername());
 
+        if(!user.getFullName().isEmpty() && !user.getFullName().isBlank()){
+            localUser.setFullName(user.getFullName());
+        }
+        if(!user.getEmail().isEmpty() && !user.getEmail().isBlank()){
+            localUser.setEmail(user.getEmail());
+        }
+        if(!user.getAddress().isEmpty() && !user.getAddress().isBlank()){
+            localUser.setAddress(user.getAddress());
+        }
+        if(!user.getPassword().isEmpty() && !user.getPassword().isBlank()){
+            localUser.setPassword(user.getPassword());
+        }
+
         this.save(localUser);
 
         return localUser;
