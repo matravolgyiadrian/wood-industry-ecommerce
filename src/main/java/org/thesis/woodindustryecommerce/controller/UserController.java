@@ -1,5 +1,6 @@
 package org.thesis.woodindustryecommerce.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,7 @@ import org.thesis.woodindustryecommerce.services.UserService;
 
 import java.security.Principal;
 
+@Slf4j
 @Controller
 public class UserController {
 
@@ -80,6 +82,7 @@ public class UserController {
     public String editUser(@ModelAttribute User userToEdit, Model model, Principal principal) {
 
         userToEdit.setUsername(principal.getName());
+        log.info("User to edit form: {}", userToEdit.toString());
 
         if (userService.findByEmail(userToEdit.getEmail()) != null) {
             model.addAttribute("emailExists", true);
