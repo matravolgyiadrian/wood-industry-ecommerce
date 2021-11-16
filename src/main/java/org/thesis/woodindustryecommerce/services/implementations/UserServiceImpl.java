@@ -2,7 +2,6 @@ package org.thesis.woodindustryecommerce.services.implementations;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.websocket.servlet.UndertowWebSocketServletWebServerCustomizer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.thesis.woodindustryecommerce.model.Role;
@@ -72,7 +71,7 @@ public class UserServiceImpl implements UserService {
         User user = User.builder()
                 .username("guest_"+userRepository.count())
                 .password("")
-                .name(name)
+                .fullName(name)
                 .email(email)
                 .address(address)
                 .build();
@@ -83,21 +82,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public User editUser(User user) {
         User localUser = userRepository.findByUsername(user.getUsername());
-        if(!user.getName().isEmpty()){
-            localUser.setName(user.getName());
-        }
-        if(!user.getEmail().isEmpty()){
-            localUser.setEmail(user.getEmail());
-        }
-        if(!user.getAddress().isEmpty()){
-            localUser.setAddress(user.getAddress());
-        }
-        if(!user.getPassword().isEmpty()){
-            log.info("password is empty? : {}", user.getPassword().isEmpty());
-            localUser.setPassword(user.getPassword());
-        }
-
-        log.info("the new user is: {}", localUser.toString());
 
         this.save(localUser);
 

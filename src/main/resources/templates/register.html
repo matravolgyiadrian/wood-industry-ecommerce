@@ -18,7 +18,7 @@
                 <form autocomplete="off" th:action="@{/register}" method="post" th:object="${userForm}">
                     <div class="form-group">
                         <label for="name">Full Name</label>
-                        <input id="name" type="text" class="form-control" minlength="5" name="name" th:field="*{name}" required autofocus>
+                        <input id="name" type="text" class="form-control" minlength="5" name="name" th:field="*{fullName}" required autofocus>
                     </div>
                     <div class="form-group">
                         <label for="username">Username</label>
