@@ -93,6 +93,7 @@ public class UserServiceImpl implements UserService {
             localUser.setAddress(user.getAddress());
         }
         if(!user.getPassword().isEmpty()){
+            log.info("password is empty? : {}", user.getPassword().isEmpty());
             localUser.setPassword(user.getPassword());
         }
 

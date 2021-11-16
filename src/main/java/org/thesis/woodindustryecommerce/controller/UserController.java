@@ -75,6 +75,8 @@ public class UserController {
     public String editUser(Model model, Principal principal){
         model.addAttribute("userToEdit", userService.findByUsername(principal.getName()));
 
+        log.info("user to edit before edit: {}", userService.findByUsername(principal.getName()).toString());
+
         return "edit_user";
     }
 
@@ -83,6 +85,7 @@ public class UserController {
 
         userToEdit.setUsername(principal.getName());
         log.info("User to edit form: {}", userToEdit.toString());
+        log.info("User to edit full name: {}", userToEdit.getName());
 
         if (userService.findByEmail(userToEdit.getEmail()) != null) {
             model.addAttribute("emailExists", true);
