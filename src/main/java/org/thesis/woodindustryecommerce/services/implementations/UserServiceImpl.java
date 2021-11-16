@@ -94,6 +94,7 @@ public class UserServiceImpl implements UserService {
         }
         if(!user.getPassword().isEmpty() && !user.getPassword().isBlank()){
             localUser.setPassword(user.getPassword());
+            log.info("input password: '{}'", user.getPassword());
         }
 
         this.save(localUser);
