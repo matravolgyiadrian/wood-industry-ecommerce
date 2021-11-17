@@ -63,6 +63,7 @@ public class CartController {
         model.addAttribute("total_price", calculateTotalPrice(getCart(session)));
         model.addAttribute("discountPercentage", 0);
         model.addAttribute("discountMultiplier", 1);
+        model.addAttribute("shopping_cart", session.getAttribute("shopping_cart"));
 
         return "cart";
     }

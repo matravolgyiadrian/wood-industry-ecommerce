@@ -12,7 +12,7 @@
     <h1 class="text-center">Shopping Cart</h1>
     <div class="row">
         <div class="alert alert-info" th:unless="${session.containsKey('shopping_cart') and !session.shopping_cart.isEmpty()}" >There is no item in the cart</div>
-        <table class="table m-" th:if="${session.containsKey('shopping_cart') and !session.shopping_cart.isEmpty()}">
+        <table class="table m-"> <!--th:if="${session.containsKey('shopping_cart') and !session.shopping_cart.isEmpty()}"-->>
             <thead>
             <tr>
                 <th></th>
@@ -24,7 +24,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="item: ${session.shopping_cart}">
+            <tr th:each="item: ${shopping_cart}">
                 <td>
                     <img style="width: 6rem; object-fit: cover;" th:src="${item.product.imageUrl}" class="card-img-top" alt="..." onerror="this.src='https://thumbs.dreamstime.com/b/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132482953.jpg'">
                 </td>
