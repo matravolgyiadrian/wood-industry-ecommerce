@@ -50,8 +50,8 @@ public class CartController {
     }
 
     @PostMapping("/cart/remove/")
-    public String removeFromCart(Long id, HttpSession session) {
-        List<CartItem> cart = getCart(session);
+    public String removeFromCart(Long id, HttpSession session, HttpServletRequest request) {
+        List<CartItem> cart = getCart(request.getSession());
         cart.removeIf(item -> item.getProduct().getId().equals(id));
 
 
@@ -59,8 +59,7 @@ public class CartController {
     }
 
     @GetMapping("/cart/details")
-    public String cartDetails(Model model, HttpSession session, HttpServletRequest request) {
-        getCart(request.getSession());
+    public String cartDetails(Model model, HttpSession session) {
         model.addAttribute("total_price", calculateTotalPrice(getCart(session)));
         model.addAttribute("discountPercentage", 0);
         model.addAttribute("discountMultiplier", 1);
@@ -70,7 +69,7 @@ public class CartController {
 
 
     @PostMapping("/cart/validate-coupon")
-    public String validate(Model model, String couponCode, HttpSession session, Principal principal){
+    public String validate(Model model, String couponCode, HttpSession session, Principal principal, HttpServletRequest request){
         Coupon coupon = couponService.findByCouponCode(couponCode);
 
         if(coupon == null){
@@ -83,7 +82,7 @@ public class CartController {
 
         }
 
-        model.addAttribute("total_price", calculateTotalPrice(getCart(session)));
+        model.addAttribute("total_price", calculateTotalPrice(getCart(request.getSession())));
         model.addAttribute("billingForm", new Billing());
         if(principal!= null){
             model.addAttribute("user", userService.findByUsername(principal.getName()));
@@ -94,9 +93,8 @@ public class CartController {
     }
 
     @GetMapping("/cart/checkout")
-    public String checkout(Model model, HttpSession session, Principal principal, HttpServletRequest request){
-        log.info("It's from /cart/checkout! And the user principal is: {}", request.getUserPrincipal());
-        List<CartItem> cart = getCart(request.getSession());
+    public String checkout(Model model, HttpSession session, Principal principal){
+        List<CartItem> cart = getCart(session);
 
         if (cart.isEmpty()) {
             model.addAttribute("emptyCart", true);
@@ -121,9 +119,9 @@ public class CartController {
     }
 
     @PostMapping("/cart/checkout")
-    public String checkout(Model model, HttpSession session, Principal principal, double discountMultiplier, Billing billingForm) {
+    public String checkout(Model model, HttpSession session, Principal principal, double discountMultiplier, Billing billingForm, HttpServletRequest request) {
         //TODO send email about the order
-        List<CartItem> cart = getCart(session);
+        List<CartItem> cart = getCart(request.getSession());
 
         Order order = new Order();
         order.setTotalPrice(calculateTotalPrice(cart));
@@ -151,7 +149,7 @@ public class CartController {
 
         orderService.save(order);
 
-        session.setAttribute("shopping_cart", new LinkedList<>());
+        request.getSession().setAttribute("shopping_cart", new LinkedList<>());
 
         return "redirect:/home";
     }
@@ -162,8 +160,7 @@ public class CartController {
         }
 
         List<CartItem> cart = (List<CartItem>) session.getAttribute("shopping_cart");
-        log.info("getCart items:");
-        cart.forEach(item -> log.info("cart item product name: {}", item.getProduct().getName()));
+        log.info("getCart: cart has");
         return cart;
     }
 
