@@ -158,7 +158,10 @@ public class CartController {
             session.setAttribute("shopping_cart", new LinkedList<>());
         }
 
-        return (List<CartItem>) session.getAttribute("shopping_cart");
+        List<CartItem> cart = (List<CartItem>) session.getAttribute("shopping_cart");
+        log.info("getCart items:");
+        cart.forEach(item -> log.info("cart item product name: {}", item.getProduct().getName()));
+        return cart;
     }
 
     private boolean addItem(List<CartItem> cart, CartItem item) {
