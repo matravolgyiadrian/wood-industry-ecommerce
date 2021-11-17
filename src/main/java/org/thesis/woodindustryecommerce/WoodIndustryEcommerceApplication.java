@@ -6,7 +6,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.session.jdbc.config.annotation.web.http.EnableJdbcHttpSession;
 
 @SpringBootApplication
-@EnableJdbcHttpSession
 @ComponentScan(basePackages = {"org.thesis.woodindustryecommerce"})
 public class WoodIndustryEcommerceApplication {
 
