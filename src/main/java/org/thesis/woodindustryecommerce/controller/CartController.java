@@ -36,11 +36,11 @@ public class CartController {
     }
 
     @PostMapping("/cart/add")
-    public String addToCart(Long id, int quantity, HttpSession session, Model model) {
+    public String addToCart(Long id, int quantity, HttpSession session, Model model, HttpServletRequest request) {
 
         Product product = productService.findById(id);
         CartItem cartItem = new CartItem(product, quantity);
-        List<CartItem> cart = getCart(session);
+        List<CartItem> cart = getCart(request.getSession());
 
         if (!addItem(cart, cartItem)) {
             model.addAttribute("notEnoughInStock", true);
@@ -59,7 +59,8 @@ public class CartController {
     }
 
     @GetMapping("/cart/details")
-    public String cartDetails(Model model, HttpSession session) {
+    public String cartDetails(Model model, HttpSession session, HttpServletRequest request) {
+        getCart(request.getSession());
         model.addAttribute("total_price", calculateTotalPrice(getCart(session)));
         model.addAttribute("discountPercentage", 0);
         model.addAttribute("discountMultiplier", 1);
