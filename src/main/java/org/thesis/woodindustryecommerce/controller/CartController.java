@@ -12,6 +12,7 @@ import org.thesis.woodindustryecommerce.services.OrderService;
 import org.thesis.woodindustryecommerce.services.ProductService;
 import org.thesis.woodindustryecommerce.services.UserService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.LinkedList;
@@ -92,8 +93,9 @@ public class CartController {
     }
 
     @GetMapping("/cart/checkout")
-    public String checkout(Model model, HttpSession session, Principal principal){
-        List<CartItem> cart = getCart(session);
+    public String checkout(Model model, HttpSession session, Principal principal, HttpServletRequest request){
+        log.info("It's from /cart/checkout! And the user principal is: {}", request.getUserPrincipal());
+        List<CartItem> cart = getCart(request.getSession());
 
         if (cart.isEmpty()) {
             model.addAttribute("emptyCart", true);
