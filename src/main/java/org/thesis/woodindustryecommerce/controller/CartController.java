@@ -56,6 +56,8 @@ public class CartController {
         List<CartItem> cart = getCart(session);
         cart.removeIf(item -> item.getProduct().getId().equals(id));
 
+        session.setAttribute("shopping_cart", cart);
+
 
         return "cart";
     }

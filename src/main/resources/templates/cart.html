@@ -12,7 +12,7 @@
     <h1 class="text-center">Shopping Cart</h1>
     <div class="row">
         <div class="alert alert-info" th:unless="${session.containsKey('shopping_cart') and !session.shopping_cart.isEmpty()}" >There is no item in the cart</div>
-        <table class="table m-"> <!--th:if="${session.containsKey('shopping_cart') and !session.shopping_cart.isEmpty()}"-->
+        <table class="table m-" th:if="${session.containsKey('shopping_cart') and !session.shopping_cart.isEmpty()}">
             <thead>
             <tr>
                 <th></th>
