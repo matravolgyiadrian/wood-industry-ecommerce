@@ -44,6 +44,7 @@ public class CartController {
 
         List<String> messages = getMessages(session);
         messages.add("Click " + messages.size());
+        session.setAttribute("message", messages);
 
         if (!addItem(cart, cartItem)) {
             model.addAttribute("notEnoughInStock", true);
@@ -173,7 +174,7 @@ public class CartController {
     //TODO delete temporary method
     private List<String> getMessages(HttpSession session){
         if(session.getAttribute("message") == null){
-            session.setAttribute("message", new LinkedList<>());
+            session.setAttribute("message", new LinkedList<String>());
         }
 
         return (List<String>) session.getAttribute("message");
