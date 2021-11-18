@@ -162,6 +162,7 @@ public class CartController {
 
         List<CartItem> cart = (List<CartItem>) session.getAttribute("shopping_cart");
         log.info("getCart: cart has");
+        cart.forEach(item -> log.info("item: {}", item.getProduct().getName()));
         return cart;
     }
 
