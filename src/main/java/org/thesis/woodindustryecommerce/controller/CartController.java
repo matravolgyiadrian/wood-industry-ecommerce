@@ -42,6 +42,9 @@ public class CartController {
         CartItem cartItem = new CartItem(product, quantity);
         List<CartItem> cart = getCart(request.getSession());
 
+        request.getSession().setAttribute("message", "HELLO");
+
+
         if (!addItem(cart, cartItem)) {
             model.addAttribute("notEnoughInStock", true);
         }
@@ -65,6 +68,7 @@ public class CartController {
         model.addAttribute("discountMultiplier", 1);
         model.addAttribute("shopping_cart", (List<CartItem>) session.getAttribute("shopping_cart"));
 
+        model.addAttribute("msg", session.getAttribute("message"));
         return "cart";
     }
 
