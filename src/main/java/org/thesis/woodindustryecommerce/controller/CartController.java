@@ -42,14 +42,12 @@ public class CartController {
         CartItem cartItem = new CartItem(product, quantity);
         List<CartItem> cart = getCart(session);
 
-        List<String> messages = getMessages(session);
-        messages.add("Click " + messages.size());
-        session.setAttribute("message", messages);
-
         if (!addItem(cart, cartItem)) {
             model.addAttribute("notEnoughInStock", true);
+            return "redirect:/home";
         }
 
+        session.setAttribute("shopping_cart", cart);
         return "redirect:/home";
     }
 
@@ -171,15 +169,6 @@ public class CartController {
         return cart;
     }
 
-    //TODO delete temporary method
-    private List<String> getMessages(HttpSession session){
-        if(session.getAttribute("message") == null){
-            session.setAttribute("message", new LinkedList<String>());
-        }
-
-        return (List<String>) session.getAttribute("message");
-    }
-
     private boolean addItem(List<CartItem> cart, CartItem item) {
         for (CartItem cartItem : cart) {
             if (cartItem.getProduct().getId().equals(item.getProduct().getId())) {
@@ -191,6 +180,7 @@ public class CartController {
             return false;
         }
         cart.add(item);
+
         return true;
     }
 
