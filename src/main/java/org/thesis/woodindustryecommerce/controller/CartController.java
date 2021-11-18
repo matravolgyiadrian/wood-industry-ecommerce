@@ -40,9 +40,9 @@ public class CartController {
 
         Product product = productService.findById(id);
         CartItem cartItem = new CartItem(product, quantity);
-        List<CartItem> cart = getCart(request.getSession());
+        List<CartItem> cart = getCart(session);
 
-        request.getSession().setAttribute("message", "HELLO");
+        session.setAttribute("message", "HELLO");
 
 
         if (!addItem(cart, cartItem)) {
@@ -54,7 +54,7 @@ public class CartController {
 
     @PostMapping("/cart/remove/")
     public String removeFromCart(Long id, HttpSession session, HttpServletRequest request) {
-        List<CartItem> cart = getCart(request.getSession());
+        List<CartItem> cart = getCart(session);
         cart.removeIf(item -> item.getProduct().getId().equals(id));
 
 
@@ -87,7 +87,7 @@ public class CartController {
 
         }
 
-        model.addAttribute("total_price", calculateTotalPrice(getCart(request.getSession())));
+        model.addAttribute("total_price", calculateTotalPrice(getCart(session)));
         model.addAttribute("billingForm", new Billing());
         if(principal!= null){
             model.addAttribute("user", userService.findByUsername(principal.getName()));
@@ -126,7 +126,7 @@ public class CartController {
     @PostMapping("/cart/checkout")
     public String checkout(Model model, HttpSession session, Principal principal, double discountMultiplier, Billing billingForm, HttpServletRequest request) {
         //TODO send email about the order
-        List<CartItem> cart = getCart(request.getSession());
+        List<CartItem> cart = getCart(session);
 
         Order order = new Order();
         order.setTotalPrice(calculateTotalPrice(cart));
@@ -154,7 +154,7 @@ public class CartController {
 
         orderService.save(order);
 
-        request.getSession().setAttribute("shopping_cart", new LinkedList<>());
+        session.setAttribute("shopping_cart", new LinkedList<>());
 
         return "redirect:/home";
     }
