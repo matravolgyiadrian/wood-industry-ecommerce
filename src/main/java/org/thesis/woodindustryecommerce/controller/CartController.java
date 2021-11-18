@@ -162,7 +162,7 @@ public class CartController {
 
     private List<CartItem> getCart(HttpSession session) {
         if (session.getAttribute("shopping_cart") == null) {
-            session.setAttribute("shopping_cart", new LinkedList<>());
+            session.setAttribute("shopping_cart", new LinkedList<CartItem>());
         }
 
         List<CartItem> cart = (List<CartItem>) session.getAttribute("shopping_cart");
