@@ -23,25 +23,26 @@
           </div>
           <span th:text="${#numbers.formatDecimal(item.totalPrice, 1, 'DEFAULT', 2, 'DEFAULT')} + ' Ft'" class="text-muted">$12</span>
         </li>
-
-        <li th:if="${discountPercentage != 0}" class="list-group-item d-flex justify-content-between bg-light">
+        <li id="coupon" hidden></li>
+        <!--<li th:if="${discountPercentage != 0}" class="list-group-item d-flex justify-content-between bg-light">
           <div class="text-success">
             <h6 class="my-0">Coupon code</h6>
             <small th:text="${coupon_code?:''}">EXAMPLECODE</small>
           </div>
-          <span th:text="'- ' + ${#numbers.formatDecimal(total_price * discountPercentage/100, 1, 'DEFAULT', 2, 'DEFAULT')} + ' Ft'" class="text-success">-$5</span>
-        </li>
+          <span th:text="'- ' + ${#numbers.formatDecimal(total_price * d iscountPercentage/100, 1, 'DEFAULT', 2, 'DEFAULT')} + ' Ft'" class="text-success">-$5</span>
+        </li>-->
         <li class="list-group-item d-flex justify-content-between">
           <span>Grand Total</span>
-          <strong th:text="${#numbers.formatDecimal(total_price * discountMultiplier, 1, 'DEFAULT', 2, 'DEFAULT')} + ' Ft'">$20</strong>
+          <strong  th:text="${#numbers.formatDecimal(total_price * discountMultiplier, 1, 'DEFAULT', 2, 'DEFAULT')} + ' Ft'">$20</strong>
         </li>
       </ul>
+      <p id="totalPrice" hidden th:text="${total_price}"></p>
 
-      <form class="card p-2" th:action="@{/cart/validate-coupon}" method="post">
+      <form id="couponForm" class="card p-2">
         <div class="input-group">
-          <input type="text" class="form-control" placeholder="COUPON CODE" autocomplete="off" name="couponCode">
+          <input type="text" id="couponInput" class="form-control" placeholder="COUPON CODE" autocomplete="off" name="couponCode">
           <div class="input-group-append">
-            <button type="submit" class="btn btn-secondary">Redeem</button>
+            <button type="submit" id="validateCoupon" class="btn btn-secondary">Redeem</button>
           </div>
         </div>
       </form>
@@ -53,7 +54,7 @@
         <div sec:authorize="isAuthenticated()" class="row">
           <div class="mb-3">
             <label for="loggedinName">Full name</label>
-            <input type="text" class="form-control" id="loggedinName" placeholder="Jon Doe" name="name" th:field="${user.name}" required>
+            <input type="text" class="form-control" id="loggedinName" placeholder="Jon Doe" name="name" th:field="${user.fullName}" required>
           </div>
 
           <div class="mb-3">
