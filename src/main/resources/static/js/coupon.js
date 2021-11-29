@@ -37,4 +37,5 @@ $(function () {
     });
     $("#validateCoupon").click(function() { sendCoupon(); });
     $("#hiddenDiscountMultiplier").html("1");
+    connect();
 });

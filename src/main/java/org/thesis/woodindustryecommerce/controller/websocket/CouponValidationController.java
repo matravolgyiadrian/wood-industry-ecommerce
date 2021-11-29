@@ -30,6 +30,6 @@ public class CouponValidationController {
         assert attributes != null;
         log.info("Session attributes has shopping_cart? : {}", attributes.containsKey("shopping_cart"));
 
-        return couponService.findByCouponCode(code.getCode());
+        return couponService.findByCouponCode(code.getCode().toUpperCase());
     }
 }
