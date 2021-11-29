@@ -18,10 +18,13 @@ function connect() {
 }
 
 function showCoupon(coupon) {
-    var totalPrice = $("#totalPrice").text();
+    var totalPrice = parseInt($("#totalPrice").text(), 10);
+    var discount = totalPrice * coupon.discountAmount/100;
 
     $("#coupon").show();
-    $("#coupon").html('<div class="text-success"><h6 class="my-0">Coupon code</h6><small>' + coupon.couponCode + '</small></div><span class="text-success">- '+ totalPrice * coupon.discountAmount/100 +'</span>');
+    $("#coupon").html('<div class="text-success"><h6 class="my-0">Coupon code</h6><small>' + coupon.couponCode + '</small></div><span class="text-success">- '+ discount +'</span>');
+    $("grandTotal").html(totalPrice - discount);
+    $("hiddenDiscountMultiplier").html((100-coupon.discountAmount)/100);
 }
 
 function sendCoupon() {
@@ -33,5 +36,5 @@ $(function () {
         e.preventDefault();
     });
     $("#validateCoupon").click(function() { sendCoupon(); });
-
+    $("#hiddenDiscountMultiplier").html("1");
 });

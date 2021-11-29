@@ -33,7 +33,7 @@
         </li>-->
         <li class="list-group-item d-flex justify-content-between">
           <span>Grand Total</span>
-          <strong  th:text="${#numbers.formatDecimal(total_price * discountMultiplier, 1, 'DEFAULT', 2, 'DEFAULT')} + ' Ft'">$20</strong>
+          <strong id="grandTotal" th:text="${#numbers.formatDecimal(total_price, 1, 'DEFAULT', 2, 'DEFAULT')} + ' Ft'">$20</strong>
         </li>
       </ul>
       <p id="totalPrice" hidden th:text="${total_price}"></p>
@@ -50,7 +50,7 @@
     <div class="col-md-8 order-md-1">
       <h4 class="mb-3">Billing address</h4>
       <form method="post" th:action="@{/cart/checkout}">
-        <input type="hidden" name="discountMultiplier" th:value="${discountMultiplier}">
+        <input id="hiddenDiscountMultiplier" type="hidden" name="discountMultiplier">
         <div sec:authorize="isAuthenticated()" class="row">
           <div class="mb-3">
             <label for="loggedinName">Full name</label>
@@ -129,5 +129,6 @@
   </div>
 </div>
 </div>
+<script type="text/javascript" th:src="@{/js/coupon.js}"></script>
 </body>
 </html>
