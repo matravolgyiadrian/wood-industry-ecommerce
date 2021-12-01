@@ -6,6 +6,7 @@ function connect() {
     stompClient.connect({}, function(frame) {
         console.log('Connected: '+ frame);
         stompClient.subscribe('/coupon/validation', function(coupon) {
+            log.console("Subscription has something! coupon: " + coupon);
             if(coupon !== null) {
                 showCoupon(JSON.parse(coupon.body));
                 console.log("JSON coupon: "+ coupon.body)
