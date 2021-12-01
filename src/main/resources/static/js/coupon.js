@@ -6,7 +6,7 @@ function connect() {
     stompClient.connect({}, function(frame) {
         console.log('Connected: '+ frame);
         stompClient.subscribe('/coupon/validation', function(coupon) {
-            log.console("Subscription has something! coupon: " + coupon);
+            console.log("Subscription has something! coupon: " + coupon);
             if(coupon !== null) {
                 showCoupon(JSON.parse(coupon.body));
                 console.log("JSON coupon: "+ coupon.body)
@@ -20,7 +20,7 @@ function connect() {
 
 function showCoupon(coupon) {
     var totalPrice = parseInt($("#totalPrice").text(), 10);
-    var discount = totalPrice * coupon.discountAmount/100;
+    var discount = totalPrice * coupon.discountMultiplier;
 
     $("#coupon").show();
     $("#coupon").html('<div class="text-success"><h6 class="my-0">Coupon code</h6><small>' + coupon.couponCode + '</small></div><span class="text-success">- '+ discount +'</span>');
