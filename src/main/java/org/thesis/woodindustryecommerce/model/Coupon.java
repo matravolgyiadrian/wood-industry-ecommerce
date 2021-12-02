@@ -1,6 +1,7 @@
 package org.thesis.woodindustryecommerce.model;
 
 import lombok.*;
+import org.thesis.woodindustryecommerce.model.websocket.CouponMessage;
 
 import javax.persistence.*;
 
@@ -27,5 +28,14 @@ public class Coupon {
     }
     public double getMultiplier() {
         return (double) discountAmount / 100D;
+    }
+
+    public CouponMessage toCouponMessage(boolean valid){
+        CouponMessage couponMessage = new CouponMessage();
+        couponMessage.setCouponCode(couponCode);
+        couponMessage.setDiscountAmount(discountAmount);
+        couponMessage.setValid(valid);
+
+        return couponMessage;
     }
 }

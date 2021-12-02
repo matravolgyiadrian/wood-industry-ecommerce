@@ -8,6 +8,7 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 import org.thesis.woodindustryecommerce.model.Coupon;
 import org.thesis.woodindustryecommerce.model.websocket.CouponCode;
+import org.thesis.woodindustryecommerce.model.websocket.CouponMessage;
 import org.thesis.woodindustryecommerce.services.CouponService;
 
 import java.util.Map;
@@ -25,11 +26,16 @@ public class CouponValidationController {
 
     @MessageMapping("/coupon")
     @SendTo("/coupon/validation")
-    public Coupon validate(CouponCode code, SimpMessageHeaderAccessor headerAccessor){
+    public CouponMessage validate(CouponCode code, SimpMessageHeaderAccessor headerAccessor){
         Map<String, Object> attributes = headerAccessor.getSessionAttributes();
         assert attributes != null;
         log.info("Session attributes has shopping_cart? : {}", attributes.containsKey("shopping_cart"));
 
-        return couponService.findByCouponCode(code.getCode().toUpperCase());
+        Coupon coupon = couponService.findByCouponCode(code.getCode());
+        if (coupon == null){
+            return new CouponMessage(false);
+        } else{
+            return coupon.toCouponMessage(true);
+        }
     }
 }
