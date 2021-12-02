@@ -23,7 +23,7 @@
           </div>
           <span th:text="${#numbers.formatDecimal(item.totalPrice, 1, 'DEFAULT', 2, 'DEFAULT')} + ' Ft'" class="text-muted">$12</span>
         </li>
-        <li id="coupon" class="list-group-item d-flex justify-content-between" hidden></li>
+        <li id="coupon" class="list-group-item d-none justify-content-between"></li>
         <!--<li th:if="${discountPercentage != 0}" class="list-group-item d-flex justify-content-between bg-light">
           <div class="text-success">
             <h6 class="my-0">Coupon code</h6>

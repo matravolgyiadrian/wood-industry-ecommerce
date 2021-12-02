@@ -11,8 +11,10 @@ function connect() {
                 showCoupon(JSON.parse(coupon.body));
                 console.log("JSON coupon: "+ coupon.body)
             } else {
+                $("#coupon").removeClass("d-flex").addClass("d-none");
                 $("#couponInput").prop("placeholder", "INVALID CODE");
-                $("#couponInput").css("border-color", "red");
+                $("#couponForm").css("border", "2px solid red");
+                $("#couponInput").val("");
             }
         });
     });
@@ -20,12 +22,17 @@ function connect() {
 
 function showCoupon(coupon) {
     var totalPrice = parseInt($("#totalPrice").text(), 10);
-    var discount = totalPrice * coupon.discountMultiplier;
+    var discount = totalPrice * coupon.multiplier;
 
-    $("#coupon").removeAttr('hidden');
+    $("#coupon").removeClass("d-none").addClass("d-flex");
     $("#coupon").html('<div class="text-success"><h6 class="my-0">Coupon code</h6><small>' + coupon.couponCode + '</small></div><span class="text-success">- '+ discount +'</span>');
-    $("grandTotal").html(totalPrice - discount);
+    $("grandTotal").html(totalPrice * coupon.discountMultiplier);
     $("hiddenDiscountMultiplier").html((100-coupon.discountAmount)/100);
+
+    $("#couponInput").prop("placeholder", "COUPON CODE");
+    $("#couponForm").css("border", "1px solid rgba(0,0,0,.125)");
+    $("#couponInput").val("");
+
 }
 
 function sendCoupon() {
