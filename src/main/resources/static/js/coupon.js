@@ -22,13 +22,13 @@ function connect() {
 }
 
 function showCoupon(coupon) {
-    var totalPrice = parseInt($("#totalPrice").text(), 10);
-    var discount = totalPrice * coupon.multiplier;
+    var totalPrice = parseFloat($("#totalPrice").text(), 10);
+    var discount = parseFloat(totalPrice * coupon.multiplier);
 
     $("#coupon").removeClass("d-none").addClass("d-flex");
     $("#coupon").html('<div class="text-success"><h6 class="my-0">Coupon code</h6><small>' + coupon.couponCode + '</small></div><span class="text-success">- '+ discount +'</span>');
     $("grandTotal").html(totalPrice * coupon.discountMultiplier);
-    $("hiddenDiscountMultiplier").html((100-coupon.discountAmount)/100);
+    $("hiddenDiscountMultiplier").html(parseFloat((100-coupon.discountAmount)/100));
 
     $("#couponInput").prop("placeholder", "COUPON CODE");
     $("#couponForm").css("border", "1px solid rgba(0,0,0,.125)");
