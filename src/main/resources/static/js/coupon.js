@@ -45,6 +45,6 @@ $(function () {
         e.preventDefault();
     });
     $("#validateCoupon").click(function() { sendCoupon(); });
-    $("#hiddenDiscountMultiplier").html(parseFloat(1));
+    $("#hiddenDiscountMultiplier").html(1.0);
     connect();
 });
