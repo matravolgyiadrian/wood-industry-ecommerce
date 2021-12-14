@@ -26,9 +26,10 @@ function showCoupon(coupon) {
     var discount = parseFloat(totalPrice * coupon.multiplier);
 
     $("#coupon").removeClass("d-none").addClass("d-flex");
-    $("#coupon").html('<div class="text-success"><h6 class="my-0">Coupon code</h6><small>' + coupon.couponCode + '</small></div><span class="text-success">- '+ discount +'</span>');
+    $("#coupon").html('<div class="text-success"><h6 class="my-0">Coupon code</h6><small>' + coupon.couponCode
+        + '</small></div><span class="text-success">- '+ discount +'</span>');
     $("grandTotal").html(totalPrice * coupon.discountMultiplier);
-    $("hiddenDiscountMultiplier").html(parseFloat((100-coupon.discountAmount)/100));
+    $("hiddenDiscountMultiplier").val(parseFloat((100-coupon.discountAmount)/100));
 
     $("#couponInput").prop("placeholder", "COUPON CODE");
     $("#couponForm").css("border", "1px solid rgba(0,0,0,.125)");
@@ -45,6 +46,6 @@ $(function () {
         e.preventDefault();
     });
     $("#validateCoupon").click(function() { sendCoupon(); });
-    $("#hiddenDiscountMultiplier").html(1.0);
+    $("#hiddenDiscountMultiplier").val(1.0);
     connect();
 });
