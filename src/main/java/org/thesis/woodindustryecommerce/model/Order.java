@@ -12,20 +12,19 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "orders")
+@NamedEntityGraph(name = "Order.detail", attributeNodes = {@NamedAttributeNode("products")})
 public class Order {
     @Id
     @Setter(AccessLevel.NONE)
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne(targetEntity = User.class)
-    @JoinColumn(name = "customer_id", referencedColumnName = "id")
-    private User customer;
+    private String customer;
 
-    @ManyToMany(targetEntity = CartItem.class, cascade = CascadeType.ALL)
-    @JoinTable(name = "orders_cart_items",
-            joinColumns = @JoinColumn(name = "orders_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "cart_items_id", referencedColumnName = "id"))
+    private String email;
+
+    @ElementCollection
+    @CollectionTable(name = "product_list", joinColumns = @JoinColumn(name = "orders_id", referencedColumnName = "id"))
     private List<CartItem> products;
 
     @Column(name = "total_price")
