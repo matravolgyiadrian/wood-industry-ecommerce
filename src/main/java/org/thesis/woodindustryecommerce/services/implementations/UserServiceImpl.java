@@ -4,14 +4,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.thesis.woodindustryecommerce.model.Role;
 import org.thesis.woodindustryecommerce.model.User;
 import org.thesis.woodindustryecommerce.repository.RoleRepository;
 import org.thesis.woodindustryecommerce.repository.UserRepository;
 import org.thesis.woodindustryecommerce.services.UserService;
 
-import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Set;
 
 @Slf4j
@@ -30,11 +29,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findAll() {
-        return userRepository.findAll();
-    }
-
-    @Override
     public User findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
@@ -45,11 +39,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findById(Long id) {
-        return userRepository.findById(id).orElseThrow(NoSuchElementException::new);
-    }
-
-    @Override
+    @Transactional
     public User createUser(User user, String userRoleStr) {
         User localUser = userRepository.findByUsername(user.getUsername());
 
@@ -67,6 +57,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User createGuestUser(String name, String email, String address) {
         User user = User.builder()
                 .username("guest_"+userRepository.count())
@@ -80,6 +71,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User editUser(User user) {
         User localUser = userRepository.findByUsername(user.getUsername());
 
@@ -108,10 +100,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
-    @Override
-    public void delete(Long id) {
-        userRepository.deleteById(id);
-    }
 
     private Role findAuthority(String userRoleStr) {
         switch (userRoleStr) {
