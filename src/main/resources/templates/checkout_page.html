@@ -51,23 +51,7 @@
       <h4 class="mb-3">Billing address</h4>
       <form method="post" th:action="@{/cart/checkout}">
         <input id="hiddenDiscountMultiplier" type="hidden" name="discountMultiplier">
-        <div sec:authorize="isAuthenticated()" class="row">
-          <div class="mb-3">
-            <label for="loggedinName">Full name</label>
-            <input type="text" class="form-control" id="loggedinName" placeholder="Jon Doe" name="name" th:field="${user.fullName}" required>
-          </div>
-
-          <div class="mb-3">
-            <label for="loggedinEmail">Email</label>
-            <input type="email" class="form-control" id="loggedinEmail" placeholder="you@example.com" th:field="${user.email}" required>
-          </div>
-
-          <div class="mb-3">
-            <label for="loggedinAddress">Address</label>
-            <input type="text" class="form-control" id="loggedinAddress" placeholder="1234 Main St" th:field="${user.address}" required>
-          </div>
-        </div>
-        <div sec:authorize="isAnonymous()" class="row">
+        <div class="row">
           <div class="mb-3">
             <label for="name">Full name</label>
             <input type="text" class="form-control" id="name" name="name" th:field="${billingForm.fullName}" required>

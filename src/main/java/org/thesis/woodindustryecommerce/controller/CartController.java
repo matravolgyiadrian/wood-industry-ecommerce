@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.thesis.woodindustryecommerce.model.*;
 import org.thesis.woodindustryecommerce.model.binding.Billing;
 import org.thesis.woodindustryecommerce.services.CouponService;
@@ -12,7 +14,6 @@ import org.thesis.woodindustryecommerce.services.OrderService;
 import org.thesis.woodindustryecommerce.services.ProductService;
 import org.thesis.woodindustryecommerce.services.UserService;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.LinkedList;
@@ -20,6 +21,7 @@ import java.util.List;
 
 @Controller
 @Slf4j
+@SessionAttributes("shopping_cart")
 public class CartController {
 
     private final UserService userService;
@@ -35,47 +37,51 @@ public class CartController {
         this.couponService = couponService;
     }
 
+    @ModelAttribute("total_price")
+    public double addTotalPriceAttribute(@SessionAttribute("shopping_cart") List<CartItem> cart){
+        return calculateTotalPrice(cart);
+    }
+
     @PostMapping("/cart/add")
-    public String addToCart(Long id, int quantity, HttpSession session, Model model, HttpServletRequest request) {
+    public ModelAndView addToCart(Long id, int quantity, Model model, @SessionAttribute("shopping_cart") List<CartItem> cart, RedirectAttributes redirectAttr) {
 
         Product product = productService.findById(id);
         CartItem cartItem = new CartItem(product, quantity);
-        List<CartItem> cart = getCart(session);
 
         if (!addItem(cart, cartItem)) {
-            model.addAttribute("notEnoughInStock", true);
-            return "redirect:/home";
+            redirectAttr.addFlashAttribute("notEnoughInStock", true);
+
+            return new ModelAndView("redirect:/home");
         }
 
-        session.setAttribute("shopping_cart", cart);
-        return "redirect:/home";
+        model.addAttribute("shopping_cart", cart);
+        return new ModelAndView("redirect:/home");
     }
 
-    @PostMapping("/cart/remove/")
-    public String removeFromCart(Long id, HttpSession session, HttpServletRequest request) {
-        List<CartItem> cart = getCart(session);
+    @PostMapping("/cart/remove")
+    public String removeFromCart(Long id, Model model, @SessionAttribute("shopping_cart") List<CartItem> cart) {
+
         cart.removeIf(item -> item.getProduct().getId().equals(id));
 
-        session.setAttribute("shopping_cart", cart);
+        model.addAttribute("shopping_cart", cart);
 
 
         return "cart";
     }
 
     @GetMapping("/cart/details")
-    public String cartDetails(Model model, HttpSession session) {
-        model.addAttribute("total_price", calculateTotalPrice(getCart(session)));
+    public String cartDetails(Model model) {
+
         model.addAttribute("discountPercentage", 0);
         model.addAttribute("discountMultiplier", 1);
-        model.addAttribute("shopping_cart", (List<CartItem>) session.getAttribute("shopping_cart"));
 
-        model.addAttribute("msg", session.getAttribute("message"));
         return "cart";
     }
 
-
+    //TODO remove after successful implementation of websocket validation
     @PostMapping("/cart/validate-coupon")
-    public String validate(Model model, String couponCode, HttpSession session, Principal principal, HttpServletRequest request){
+    public String validate(Model model, String couponCode, HttpSession session, Principal principal){
+
         Coupon coupon = couponService.findByCouponCode(couponCode);
 
         if(coupon == null){
@@ -88,58 +94,52 @@ public class CartController {
 
         }
 
-        model.addAttribute("total_price", calculateTotalPrice(getCart(session)));
-        model.addAttribute("billingForm", new Billing());
         if(principal!= null){
-            model.addAttribute("user", userService.findByUsername(principal.getName()));
+            User user = userService.findByUsername(principal.getName());
+            model.addAttribute("billingForm", new Billing(user.getFullName(), user.getEmail(), user.getAddress(), null, null, null, null, null));
         } else{
-            model.addAttribute("user", new User());
+            model.addAttribute("billingForm", new Billing());
         }
-        return "checkout";
+        return "checkout_page";
     }
 
     @GetMapping("/cart/checkout")
-    public String checkout(Model model, HttpSession session, Principal principal){
-        List<CartItem> cart = getCart(session);
+    public String checkout(Model model, @SessionAttribute("shopping_cart") List<CartItem> cart, Principal principal){
 
         if (cart.isEmpty()) {
             model.addAttribute("emptyCart", true);
-            model.addAttribute("total_price", calculateTotalPrice(getCart(session)));
             model.addAttribute("discountPercentage", 0);
             model.addAttribute("discountMultiplier", 1);
 
             return "cart";
         }
-        model.addAttribute("total_price", calculateTotalPrice(getCart(session)));
         model.addAttribute("discountPercentage", 0);
         model.addAttribute("discountMultiplier", 1);
-        model.addAttribute("billingForm", new Billing());
 
-        if(principal != null){
-            model.addAttribute("user", userService.findByUsername(principal.getName()));
+        if(principal!= null){
+            User user = userService.findByUsername(principal.getName());
+            model.addAttribute("billingForm", new Billing(user.getFullName(), user.getEmail(), user.getAddress(), null, null, null, null, null));
         } else{
-            model.addAttribute("user", new User());
+            model.addAttribute("billingForm", new Billing());
         }
 
-        return "checkout";
+        return "checkout_page";
     }
 
     @PostMapping("/cart/checkout")
-    public String checkout(Model model, HttpSession session, Principal principal, double discountMultiplier, Billing billingForm, HttpServletRequest request) {
-        //TODO send email about the order
-        List<CartItem> cart = getCart(session);
+    public String checkout(Model model, @SessionAttribute("shopping_cart") List<CartItem> cart, Principal principal, double discountMultiplier, Billing billingForm) {
 
+        //TODO send email about the order
         Order order = new Order();
-        order.setTotalPrice(calculateTotalPrice(cart));
+        order.setTotalPrice(calculateTotalPrice(cart) * discountMultiplier);
         order.setProducts(cart);
+        order.setEmail(billingForm.getEmail());
         order.setShippingAddress(billingForm.getAddress());
-        User customer;
         if(principal != null){
-            customer = userService.findByUsername(principal.getName());
+            order.setCustomer(billingForm.getFullName());
         } else {
-            customer = userService.createGuestUser(billingForm.getFullName(), billingForm.getEmail(), billingForm.getAddress());
+            order.setCustomer(billingForm.getFullName()+" /GUEST/");
         }
-        order.setCustomer(customer);
 
         for (CartItem item : cart) {
             Product product = item.getProduct();
@@ -151,24 +151,11 @@ public class CartController {
             productService.save(product);
         }
 
-        order.setTotalPrice(order.getTotalPrice() * discountMultiplier);
-
         orderService.save(order);
 
-        session.setAttribute("shopping_cart", new LinkedList<>());
+        model.addAttribute("shopping_cart", new LinkedList<>());
 
         return "redirect:/home";
-    }
-
-    private List<CartItem> getCart(HttpSession session) {
-        if (session.getAttribute("shopping_cart") == null) {
-            session.setAttribute("shopping_cart", new LinkedList<CartItem>());
-        }
-
-        List<CartItem> cart = (List<CartItem>) session.getAttribute("shopping_cart");
-        log.info("getCart: cart has");
-        cart.forEach(item -> log.info("item: {}", item.getProduct().getName()));
-        return cart;
     }
 
     private boolean addItem(List<CartItem> cart, CartItem item) {
@@ -186,7 +173,7 @@ public class CartController {
         return true;
     }
 
-    private long calculateTotalPrice(List<CartItem> cart) {
+    private double calculateTotalPrice(List<CartItem> cart) {
         int sum = 0;
         for (CartItem item : cart) {
             sum += item.getTotalPrice();

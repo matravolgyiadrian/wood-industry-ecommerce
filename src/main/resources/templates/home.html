@@ -14,6 +14,7 @@
         <div class="col-12">
             <h3>Products</h3>
             <div class="alert alert-info" th:unless="${products != null and !products.empty}">There is no product</div>
+            <div class="alert alert-danger" th:if="${notEnoughInStock}">Not enough in stock</div>
             <div class="product row g-0">
                 <div th:each="product: ${products}" class="card shadow col-3">
                     <img th:src="${product.imageUrl}"

@@ -9,14 +9,9 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Data
-@Entity
-@Table(name = "cart_items")
+@Embeddable
 @NoArgsConstructor
 public class CartItem implements Serializable {
-    @Id
-    @Setter(AccessLevel.NONE)
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
     @OneToOne
     private Product product;
     private int quantity;
