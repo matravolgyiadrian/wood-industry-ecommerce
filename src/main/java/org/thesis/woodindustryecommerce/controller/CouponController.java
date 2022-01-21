@@ -39,8 +39,13 @@ public class CouponController {
         coupon.setCouponCode(coupon.getCouponCode().toUpperCase());
         for (Coupon temp : couponService.findAll()) {
             if (temp.getCouponCode().equals(coupon.getCouponCode())) {
+                //TODO codeAlreadyExists attribute isn't used yet in the html file
                 model.addAttribute("codeAlreadyExists", true);
-                return "redirect:/coupon/new";
+                model.addAttribute("coupons", couponService.findAll());
+                model.addAttribute("form", true);
+                model.addAttribute("isNew", true);
+                model.addAttribute("couponToEdit", coupon);
+                return "coupon";
             }
         }
         couponService.save(coupon);
@@ -60,7 +65,7 @@ public class CouponController {
 
     @PostMapping("/coupon/edit/{id}")
     public String editCoupon(@PathVariable Long id, @ModelAttribute Coupon couponForm) {
-        Coupon coupon = new Coupon(id, couponForm.getCouponCode(), couponForm.getDiscountAmount());
+        Coupon coupon = new Coupon(id, couponForm.getCouponCode().toUpperCase(), couponForm.getDiscountAmount());
 
         couponService.save(coupon);
 
@@ -69,7 +74,6 @@ public class CouponController {
 
     @PostMapping("/coupon/delete/{id}")
     public String deleteCoupon(@PathVariable Long id, Model model) {
-        model.addAttribute("coupons", couponService.findAll());
         couponService.delete(id);
 
         return "redirect:/coupon/all";
