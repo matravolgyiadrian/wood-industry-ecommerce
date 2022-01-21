@@ -44,6 +44,6 @@ public class OrderController {
     public String changeStatus(@PathVariable Long id) {
         orderService.changeStatus(id);
 
-        return "redirect:/order/my";
+        return "redirect:/order/all";
     }
 }
