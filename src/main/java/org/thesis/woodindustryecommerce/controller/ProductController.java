@@ -71,7 +71,7 @@ public class ProductController {
 
     @PostMapping("/product/edit/{id}")
     public String editProduct(@PathVariable Long id, @ModelAttribute Product productForm){
-        log.info("imageUrl: {}", productForm.getImage());
+        log.debug("imageUrl: {}", productForm.getImage());
         Product newProduct = new Product(id, productForm.getName(), productForm.getPrice(), productForm.getStock(), productForm.getImage(), "");
         productService.save(newProduct);
         return "redirect:/product/all";
