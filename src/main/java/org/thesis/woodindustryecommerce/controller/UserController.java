@@ -51,11 +51,15 @@ public class UserController {
     public String register(@ModelAttribute User userForm, Model model) {
         if (userService.findByUsername(userForm.getUsername()) != null) {
             model.addAttribute("usernameExists", true);
+            userForm.setPassword("");
+            model.addAttribute("userForm", userForm);
             return "register";
         }
 
         if (userService.findByEmail(userForm.getEmail()) != null) {
             model.addAttribute("emailExists", true);
+            userForm.setPassword("");
+            model.addAttribute("userForm", userForm);
             return "register";
         }
 
@@ -84,7 +88,7 @@ public class UserController {
     public String editUser(@ModelAttribute User userToEdit, Model model, Principal principal) {
 
         userToEdit.setUsername(principal.getName());
-        log.info("User to edit form: {}", userToEdit.toString());
+        log.info("User to edit form: {}", userToEdit);
 
         if (userService.findByEmail(userToEdit.getEmail()) != null && !userService.findByUsername(principal.getName()).getEmail().equals(userToEdit.getEmail())) {
             model.addAttribute("emailExists", true);
