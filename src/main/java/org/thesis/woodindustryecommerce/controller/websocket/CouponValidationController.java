@@ -3,8 +3,7 @@ package org.thesis.woodindustryecommerce.controller.websocket;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
 import org.thesis.woodindustryecommerce.model.Coupon;
 import org.thesis.woodindustryecommerce.model.websocket.CouponCode;
@@ -25,11 +24,8 @@ public class CouponValidationController {
     }
 
     @MessageMapping("/coupon")
-    @SendTo("/coupon/validation")
-    public CouponMessage validate(CouponCode code, SimpMessageHeaderAccessor headerAccessor){
-        Map<String, Object> attributes = headerAccessor.getSessionAttributes();
-        assert attributes != null;
-        log.info("Session attributes has shopping_cart? : {}", attributes.containsKey("shopping_cart"));
+    @SendToUser("/coupon/validation")
+    public CouponMessage validate(CouponCode code){
 
         Coupon coupon = couponService.findByCouponCode(code.getCode());
         if (coupon == null){
