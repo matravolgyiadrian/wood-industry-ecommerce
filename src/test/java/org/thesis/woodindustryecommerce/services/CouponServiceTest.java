@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.thesis.woodindustryecommerce.model.Coupon;
 import org.thesis.woodindustryecommerce.repository.CouponRepository;
 import org.thesis.woodindustryecommerce.services.implementations.CouponServiceImpl;
@@ -13,6 +15,8 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
+@ActiveProfiles("test")
 class CouponServiceTest {
 
     private CouponServiceImpl underTest;

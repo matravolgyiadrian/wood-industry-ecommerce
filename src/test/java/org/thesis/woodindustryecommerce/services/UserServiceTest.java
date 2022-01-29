@@ -1,13 +1,20 @@
 package org.thesis.woodindustryecommerce.services;
 
+import org.aspectj.apache.bcel.Repository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.session.SessionRepository;
 import org.springframework.test.context.ActiveProfiles;
+import org.thesis.woodindustryecommerce.config.WebSocketConfig;
 import org.thesis.woodindustryecommerce.model.Role;
 import org.thesis.woodindustryecommerce.model.User;
 import org.thesis.woodindustryecommerce.repository.RoleRepository;
@@ -16,7 +23,7 @@ import org.thesis.woodindustryecommerce.services.implementations.UserServiceImpl
 
 import java.util.Set;
 
-@DataJpaTest
+@SpringBootTest
 @ActiveProfiles("test")
 class UserServiceTest {
 
