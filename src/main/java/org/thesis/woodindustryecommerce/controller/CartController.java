@@ -72,9 +72,6 @@ public class CartController {
     @GetMapping("/cart/details")
     public String cartDetails(Model model) {
 
-        model.addAttribute("discountPercentage", 0);
-        model.addAttribute("discountMultiplier", 1);
-
         return "cart";
     }
 
@@ -108,13 +105,9 @@ public class CartController {
 
         if (cart.isEmpty()) {
             model.addAttribute("emptyCart", true);
-            model.addAttribute("discountPercentage", 0);
-            model.addAttribute("discountMultiplier", 1);
 
             return "cart";
         }
-        model.addAttribute("discountPercentage", 0);
-        model.addAttribute("discountMultiplier", 1);
 
         if(principal!= null){
             User user = userService.findByUsername(principal.getName());

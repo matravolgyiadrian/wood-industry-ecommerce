@@ -146,8 +146,6 @@ class CartControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("cart"))
                 .andExpect(model().attribute("total_price", 200.0))
-                .andExpect(model().attribute("discountPercentage", 0))
-                .andExpect(model().attribute("discountMultiplier", 1))
                 .andExpect(model().attribute("shopping_cart", cart));
 
         //THen
@@ -165,8 +163,6 @@ class CartControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("checkout_page"))
                 .andExpect(model().attribute("total_price", 200.0))
-                .andExpect(model().attribute("discountPercentage", 0))
-                .andExpect(model().attribute("discountMultiplier", 1))
                 .andExpect(model().attribute("billingForm", new Billing()));
 
         //Then
@@ -192,8 +188,6 @@ class CartControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("checkout_page"))
                 .andExpect(model().attribute("total_price", 200.0))
-                .andExpect(model().attribute("discountPercentage", 0))
-                .andExpect(model().attribute("discountMultiplier", 1))
                 .andExpect(model().attribute("billingForm", new Billing("Jon Doe", "jondoe@email", "address", null, null, null, null, null)));
 
         //Then
@@ -209,8 +203,6 @@ class CartControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("cart"))
                 .andExpect(model().attribute("total_price", 0.0))
-                .andExpect(model().attribute("discountPercentage", 0))
-                .andExpect(model().attribute("discountMultiplier", 1))
                 .andExpect(model().attribute("emptyCart", true));
 
         //Then
