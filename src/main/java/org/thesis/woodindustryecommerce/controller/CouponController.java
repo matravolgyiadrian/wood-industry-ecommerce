@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import org.thesis.woodindustryecommerce.model.Coupon;
 import org.thesis.woodindustryecommerce.services.CouponService;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Controller
 public class CouponController {
 
@@ -37,16 +40,16 @@ public class CouponController {
     @PostMapping("/coupon/new")
     public String newCoupon(Model model, Coupon coupon) {
         coupon.setCouponCode(coupon.getCouponCode().toUpperCase());
-        for (Coupon temp : couponService.findAll()) {
-            if (temp.getCouponCode().equals(coupon.getCouponCode())) {
-                //TODO codeAlreadyExists attribute isn't used yet in the html file
-                model.addAttribute("codeAlreadyExists", true);
-                model.addAttribute("coupons", couponService.findAll());
-                model.addAttribute("form", true);
-                model.addAttribute("isNew", true);
-                model.addAttribute("couponToEdit", coupon);
-                return "coupon";
-            }
+        Set<String> codes = couponService.findAll().stream()
+                .map(Coupon::getCouponCode)
+                .collect(Collectors.toSet());
+        if (codes.contains(coupon.getCouponCode())) {
+            model.addAttribute("codeAlreadyExists", true);
+            model.addAttribute("coupons", couponService.findAll());
+            model.addAttribute("form", true);
+            model.addAttribute("isNew", true);
+            model.addAttribute("couponToEdit", coupon);
+            return "coupon";
         }
         couponService.save(coupon);
 
@@ -64,9 +67,21 @@ public class CouponController {
     }
 
     @PostMapping("/coupon/edit/{id}")
-    public String editCoupon(@PathVariable Long id, @ModelAttribute Coupon couponForm) {
+    public String editCoupon(@PathVariable Long id, @ModelAttribute Coupon couponForm, Model model) {
         Coupon coupon = new Coupon(id, couponForm.getCouponCode().toUpperCase(), couponForm.getDiscountAmount());
+        Set<String> codes = couponService.findAll().stream()
+                .map(Coupon::getCouponCode)
+                .collect(Collectors.toSet());
+        codes.remove(couponService.findById(id).getCouponCode().toUpperCase());
 
+        if(codes.contains(couponForm.getCouponCode().toUpperCase())){
+            model.addAttribute("codeAlreadyExists", true);
+            model.addAttribute("coupons", couponService.findAll());
+            model.addAttribute("form", true);
+            model.addAttribute("isEdit", true);
+            model.addAttribute("couponToEdit", couponService.findById(id));
+            return "coupon";
+        }
         couponService.save(coupon);
 
         return "redirect:/coupon/all";

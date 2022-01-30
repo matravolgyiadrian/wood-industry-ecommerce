@@ -148,6 +148,8 @@ class CouponControllerTest {
     void testEditCouponShouldEditCoupon() throws Exception {
         //Given
         Coupon coupon = new Coupon(1L, "CODE20", 20);
+        Mockito.when(couponService.findAll()).thenReturn(List.of(coupon));
+        Mockito.when(couponService.findById(1L)).thenReturn(coupon);
 
         //When
         mockMvc.perform(post("/coupon/edit/1")
