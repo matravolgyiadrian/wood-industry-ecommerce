@@ -75,31 +75,6 @@ public class CartController {
         return "cart";
     }
 
-    //TODO remove after successful implementation of websocket validation
-    @PostMapping("/cart/validate-coupon")
-    public String validate(Model model, String couponCode, HttpSession session, Principal principal){
-
-        Coupon coupon = couponService.findByCouponCode(couponCode);
-
-        if(coupon == null){
-            model.addAttribute("discountPercentage", 0);
-            model.addAttribute("discountMultiplier", 1);
-        } else{
-            model.addAttribute("discountPercentage", coupon.getDiscountAmount() != 0 ? coupon.getDiscountAmount() : 0);
-            model.addAttribute("discountMultiplier", coupon.getMultiplier() != 1 ? coupon.getDiscountMultiplier() : 1);
-            model.addAttribute("coupon_code", coupon.getCouponCode());
-
-        }
-
-        if(principal!= null){
-            User user = userService.findByUsername(principal.getName());
-            model.addAttribute("billingForm", new Billing(user.getFullName(), user.getEmail(), user.getAddress(), null, null, null, null, null));
-        } else{
-            model.addAttribute("billingForm", new Billing());
-        }
-        return "checkout_page";
-    }
-
     @GetMapping("/cart/checkout")
     public String checkout(Model model, @SessionAttribute("shopping_cart") List<CartItem> cart, Principal principal){
 
