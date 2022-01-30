@@ -8,7 +8,6 @@ import org.springframework.session.jdbc.config.annotation.web.http.EnableJdbcHtt
 import org.springframework.web.filter.CommonsRequestLoggingFilter;
 
 @SpringBootApplication
-@EnableJdbcHttpSession
 @ComponentScan(basePackages = {"org.thesis.woodindustryecommerce"})
 public class WoodIndustryEcommerceApplication {
 
