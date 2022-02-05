@@ -63,7 +63,7 @@ public class DBSeeder {
                 .username("admin")
                 .password(encoder.encode("admin"))
                 .fullName("admin")
-                .email("admin@admin.com")
+                .email("admin@admin")
                 .address("35045 Alabama, Clanton 2273 Brookside Drive street")
                 .authorities(Set.of(roleRepository.findByAuthority("ROLE_ADMIN")))
                 .build();
