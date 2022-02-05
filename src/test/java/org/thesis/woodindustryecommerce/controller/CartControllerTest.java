@@ -20,10 +20,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.thesis.woodindustryecommerce.model.*;
 import org.thesis.woodindustryecommerce.model.binding.Billing;
-import org.thesis.woodindustryecommerce.services.CouponService;
 import org.thesis.woodindustryecommerce.services.OrderService;
 import org.thesis.woodindustryecommerce.services.ProductService;
 import org.thesis.woodindustryecommerce.services.UserService;
+import org.thesis.woodindustryecommerce.services.implementations.EmailSenderService;
 
 import java.util.*;
 
@@ -32,8 +32,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.setup.SharedHttpSessionConfigurer.sharedHttpSession;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @WebMvcTest(CartController.class)
 @ActiveProfiles("test")
@@ -57,11 +55,11 @@ class CartControllerTest {
     private OrderService orderService;
 
     @MockBean
-    private CouponService couponService;
+    private EmailSenderService emailSenderService;
 
     @BeforeEach
     void setup(){
-        mockMvc = MockMvcBuilders.standaloneSetup(new CartController(userService, productService, orderService, couponService))
+        mockMvc = MockMvcBuilders.standaloneSetup(new CartController(userService, productService, orderService, emailSenderService))
                 .apply(sharedHttpSession())
                 .apply(SecurityMockMvcConfigurers.springSecurity(springSecurityFilterChain))
                 .build();
@@ -244,6 +242,7 @@ class CartControllerTest {
 
         //Then
         chair.setStock(98);
+        Mockito.verify(emailSenderService, Mockito.times(1)).sendTemplateEmail("jondoe@email", cart, 200);
         Mockito.verify(productService, Mockito.times(1)).save(chair);
         Mockito.verify(orderService, Mockito.times(1)).save(order);
     }
@@ -283,6 +282,7 @@ class CartControllerTest {
 
         //Then
         chair.setStock(98);
+        Mockito.verify(emailSenderService, Mockito.times(1)).sendTemplateEmail("jondoe@email", cart, 200);
         Mockito.verify(productService, Mockito.times(1)).save(chair);
         Mockito.verify(orderService, Mockito.times(1)).save(order);
     }

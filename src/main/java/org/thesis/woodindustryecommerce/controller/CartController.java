@@ -9,12 +9,12 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.thesis.woodindustryecommerce.model.*;
 import org.thesis.woodindustryecommerce.model.binding.Billing;
-import org.thesis.woodindustryecommerce.services.CouponService;
 import org.thesis.woodindustryecommerce.services.OrderService;
 import org.thesis.woodindustryecommerce.services.ProductService;
 import org.thesis.woodindustryecommerce.services.UserService;
+import org.thesis.woodindustryecommerce.services.implementations.EmailSenderService;
 
-import javax.servlet.http.HttpSession;
+import javax.mail.MessagingException;
 import java.security.Principal;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,14 +27,14 @@ public class CartController {
     private final UserService userService;
     private final ProductService productService;
     private final OrderService orderService;
-    private final CouponService couponService;
+    private final EmailSenderService emailSenderService;
 
     @Autowired
-    public CartController(UserService userService, ProductService productService, OrderService orderService, CouponService couponService) {
+    public CartController(UserService userService, ProductService productService, OrderService orderService, EmailSenderService emailSenderService) {
         this.userService = userService;
         this.productService = productService;
         this.orderService = orderService;
-        this.couponService = couponService;
+        this.emailSenderService = emailSenderService;
     }
 
     @ModelAttribute("total_price")
@@ -95,9 +95,11 @@ public class CartController {
     }
 
     @PostMapping("/cart/checkout")
-    public String checkout(Model model, @SessionAttribute("shopping_cart") List<CartItem> cart, Principal principal, double discountMultiplier, Billing billingForm) {
+    public String checkout(Model model, @SessionAttribute("shopping_cart") List<CartItem> cart,
+                           @ModelAttribute("total_price") double total_price, Principal principal,
+                           double discountMultiplier, Billing billingForm) throws MessagingException {
 
-        //TODO send email about the order
+        emailSenderService.sendTemplateEmail(billingForm.getEmail(), cart, total_price);
         Order order = new Order();
         order.setTotalPrice(calculateTotalPrice(cart) * discountMultiplier);
         order.setProducts(cart);
@@ -112,9 +114,9 @@ public class CartController {
         for (CartItem item : cart) {
             Product product = item.getProduct();
             product.setStock(product.getStock() - item.getQuantity());
-            //Reordered from the product TODO notice admin about the reorder
             if(product.getStock() <= 10){
                 product.setStock(200);
+                emailSenderService.sendProductReorderEmail(product.getName(), 200);
             }
             productService.save(product);
         }
