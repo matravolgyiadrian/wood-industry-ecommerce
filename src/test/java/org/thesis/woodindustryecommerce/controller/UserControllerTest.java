@@ -47,21 +47,7 @@ class UserControllerTest {
         //When
         mockMvc.perform(get("/login"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("login"))
-                .andExpect(model().attribute("method", "login"));
-
-        //Then
-    }
-
-    @Test
-    void testLoginShouldAddAttributeError() throws Exception{
-        //Given
-
-        //When
-        mockMvc.perform(get("/login").param("error", "Some error"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("login"))
-                .andExpect(model().attribute("error", "Error"));
+                .andExpect(view().name("login"));
 
         //Then
     }
