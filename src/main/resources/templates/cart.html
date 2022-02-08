@@ -29,15 +29,19 @@
                     <img style="width: 6rem; object-fit: cover;" th:src="${item.product.imageUrl}" class="card-img-top" alt="..." onerror="this.src='https://thumbs.dreamstime.com/b/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132482953.jpg'">
                 </td>
                 <td th:text="${item.product.name}"></td>
-                <td th:text="${#numbers.formatDecimal(item.product.price, 1, 'DEFAULT', 2, 'DEFAULT')} + ' Ft'"></td>
-                <td th:text="${item.quantity}"></td>
+                <td th:id="'productPrice-'+${item.product.id}" th:text="${#numbers.formatDecimal(item.product.price, 1, 'DEFAULT', 2, 'DEFAULT')} + ' Ft'"></td>
                 <td>
-                    <form th:action="@{/cart/remove/}" method="post">
+                    <a th:id="'decrease-'+${item.product.id}" class="btn fs-4 quantity-control" style="background-color: #213d36; color: white;">-</a>
+                    <span th:id="'qty-'+${item.product.id}" class="m-3" th:text="${item.quantity}"></span>
+                    <a th:id="'increase-'+${item.product.id}" class="btn fs-4 quantity-control" style="background-color: #213d36; color: white;">+</a>
+                </td>
+                <td>
+                    <form th:id="'delete-'+${item.product.id}" th:action="@{/cart/remove/}" method="post">
                         <input type="hidden" name="id" th:value="${item.product.id}">
                         <input class="btn btn-danger" type="submit" value="Delete">
                     </form>
                 </td>
-                <td th:text="${#numbers.formatDecimal(item.totalPrice, 1, 'DEFAULT', 2, 'DEFAULT')} + ' Ft'"></td>
+                <td th:id="'productTotalPrice-'+${item.product.id}" th:text="${#numbers.formatDecimal(item.totalPrice, 1, 'DEFAULT', 2, 'DEFAULT')} + ' Ft'"></td>
             </tr>
             </tbody>
         </table>
@@ -45,26 +49,10 @@
     <div class="row justify-content-md-end justify-content-center">
         <table class="text-end total w-50">
             <tbody>
-            <th:block th:unless="${session.containsKey('shopping_cart') and !session.shopping_cart.isEmpty()}">
                 <tr>
                     <td>Subtotal</td>
-                    <td class="fw-bold">0 Ft</td>
+                    <td id="subTotal" th:text="${#numbers.formatDecimal(total_price, 1, 'DEFAULT', 2, 'DEFAULT')} + ' Ft'" class="fw-bold fs-4"></td>
                 </tr>
-                <tr>
-                    <td>Shipping</td>
-                    <td class="fw-bold">0 Ft</td>
-                </tr>
-                <tr>
-                    <td>Grand Total</td>
-                    <td class="fw-bold">0 Ft</td>
-                </tr>
-            </th:block>
-            <th:block th:if="${session.containsKey('shopping_cart') and !session.shopping_cart.isEmpty()}">
-                <tr>
-                    <td>Subtotal</td>
-                    <td th:text="${#numbers.formatDecimal(total_price, 1, 'DEFAULT', 2, 'DEFAULT')} + ' Ft'" class="fw-bold fs-4"></td>
-                </tr>
-            </th:block>
             </tbody>
         </table>
     </div>
@@ -73,5 +61,6 @@
         <a href="/cart/checkout" class="btn btn-success mt-4 fs-5" style="width: min-content;">Checkout</a>
     </div>
 </div>
+<script type="text/javascript" th:src="@{/js/cart.js}"></script>
 </body>
 </html>

@@ -9,7 +9,6 @@ function connect() {
             console.log("Subscription has something! coupon: " + coupon.body);
             if(JSON.parse(coupon.body).valid) {
                 showCoupon(JSON.parse(coupon.body));
-                console.log("JSON coupon: "+ coupon.body)
             } else {
                 invalidCouponCode();
             }
@@ -19,12 +18,12 @@ function connect() {
 
 function showCoupon(coupon) {
     var totalPrice = parseFloat($("#totalPrice").text(), 10);
-    var discount = parseFloat(totalPrice * coupon.multiplier);
+    var discount = toCurrency(parseFloat(totalPrice * coupon.multiplier));
 
     $("#coupon").removeClass("d-none").addClass("d-flex");
     $("#coupon").html('<div class="text-success"><h6 class="my-0">Coupon code</h6><small>' + coupon.couponCode
         + '</small></div><span class="text-success">- '+ discount +'</span>');
-    $("#grandTotal").html(totalPrice * coupon.discountMultiplier);
+    $("#grandTotal").html(toCurrency(totalPrice * coupon.discountMultiplier));
     $("#hiddenDiscountMultiplier").val(parseFloat((100-coupon.discountAmount)/100));
 
     $("#couponInput").prop("placeholder", "COUPON CODE");
@@ -38,12 +37,16 @@ function invalidCouponCode() {
     $("#coupon").removeClass("d-flex").addClass("d-none");
     $("#couponInput").prop("placeholder", "INVALID CODE");
     $("#couponForm").css("border", "2px solid red");
-    $("#grandTotal").html(parseFloat($("#totalPrice").text(), 10))
+    $("#grandTotal").html(toCurrency(parseFloat($("#totalPrice").text(), 10)));
     $("#couponInput").val("");
 }
 
 function sendCoupon() {
     stompClient.send("/app/coupon", {}, JSON.stringify( {'code': $("#couponInput").val()} ));
+}
+
+function toCurrency(number) {
+    return number.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1 ").replace(/\./g, ",")+" Ft";
 }
 
 $(function () {
