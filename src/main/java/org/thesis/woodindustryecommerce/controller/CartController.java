@@ -2,6 +2,7 @@ package org.thesis.woodindustryecommerce.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -75,6 +76,20 @@ public class CartController {
         return "cart";
     }
 
+    @PostMapping("/cart/item/quantity")
+    public ResponseEntity<?> cartItemQuantityHandler(@SessionAttribute("shopping_cart") List<CartItem> cart,
+                                                     boolean increment, long id, Model model){
+        for(CartItem item: cart){
+            if(item.getProduct().getId() == id){
+                item.setQuantity(increment?item.getQuantity()+1: item.getQuantity()-1);
+            }
+        }
+
+        model.addAttribute("shopping_cart", cart);
+
+        return ResponseEntity.ok(increment?"++":"--");
+    }
+
     @GetMapping("/cart/checkout")
     public String checkout(Model model, @SessionAttribute("shopping_cart") List<CartItem> cart, Principal principal){
 
@@ -96,12 +111,11 @@ public class CartController {
 
     @PostMapping("/cart/checkout")
     public String checkout(Model model, @SessionAttribute("shopping_cart") List<CartItem> cart,
-                           @ModelAttribute("total_price") double total_price, Principal principal,
-                           double discountMultiplier, Billing billingForm) throws MessagingException {
+                           Principal principal, double discountMultiplier, Billing billingForm) throws MessagingException {
+        double totalPrice = calculateTotalPrice(cart);
 
-        emailSenderService.sendTemplateEmail(billingForm.getEmail(), cart, total_price);
         Order order = new Order();
-        order.setTotalPrice(calculateTotalPrice(cart) * discountMultiplier);
+        order.setTotalPrice(totalPrice * discountMultiplier);
         order.setProducts(cart);
         order.setEmail(billingForm.getEmail());
         order.setShippingAddress(billingForm.getAddress());
@@ -123,6 +137,7 @@ public class CartController {
 
         orderService.save(order);
 
+        emailSenderService.sendTemplateEmail(order);
         model.addAttribute("shopping_cart", new LinkedList<>());
 
         return "redirect:/home";

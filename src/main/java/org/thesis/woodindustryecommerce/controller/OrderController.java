@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.thesis.woodindustryecommerce.services.OrderService;
 
+import javax.mail.MessagingException;
 import java.security.Principal;
 
 @Controller
@@ -41,7 +42,7 @@ public class OrderController {
 
     @GetMapping("/order/status/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public String changeStatus(@PathVariable Long id) {
+    public String changeStatus(@PathVariable Long id) throws MessagingException {
         orderService.changeStatus(id);
 
         return "redirect:/order/all";
