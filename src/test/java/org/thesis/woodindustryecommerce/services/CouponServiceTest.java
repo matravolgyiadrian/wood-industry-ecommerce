@@ -9,11 +9,11 @@ import org.springframework.test.context.ActiveProfiles;
 import org.thesis.woodindustryecommerce.model.Coupon;
 import org.thesis.woodindustryecommerce.repository.CouponRepository;
 import org.thesis.woodindustryecommerce.services.implementations.CouponServiceImpl;
+import org.thesis.woodindustryecommerce.services.implementations.EmailSenderService;
 
+import javax.mail.MessagingException;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -23,11 +23,14 @@ class CouponServiceTest {
 
     private CouponRepository couponRepository;
 
+    private EmailSenderService emailSenderService;
+
     @BeforeEach
     void init(){
         couponRepository = Mockito.mock(CouponRepository.class);
+        emailSenderService = Mockito.mock(EmailSenderService.class);
 
-        underTest = new CouponServiceImpl(couponRepository);
+        underTest = new CouponServiceImpl(couponRepository, emailSenderService);
     }
 
     @Test
@@ -78,18 +81,17 @@ class CouponServiceTest {
     @Test
     void testSaveShouldCallCouponRepository() {
         //Given
+        Coupon coupon = Coupon.builder()
+                .couponCode("CODE")
+                .discountAmount(30)
+                .build();
 
         //When
-        underTest.save(Coupon.builder()
-                .couponCode("CODE")
-                .discountAmount(30)
-                .build());
+        underTest.save(coupon);
 
         //Then
-        Mockito.verify(couponRepository, Mockito.times(1)).save(Coupon.builder()
-                .couponCode("CODE")
-                .discountAmount(30)
-                .build());
+        Mockito.verify(couponRepository, Mockito.times(1)).save(coupon);
+        Mockito.verify(emailSenderService, Mockito.times(1)).sendPromotionNotification(coupon);
     }
 
     @Test

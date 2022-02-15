@@ -15,7 +15,6 @@ import org.thesis.woodindustryecommerce.services.ProductService;
 import org.thesis.woodindustryecommerce.services.UserService;
 import org.thesis.woodindustryecommerce.services.implementations.EmailSenderService;
 
-import javax.mail.MessagingException;
 import java.security.Principal;
 import java.util.LinkedList;
 import java.util.List;
@@ -111,7 +110,7 @@ public class CartController {
 
     @PostMapping("/cart/checkout")
     public String checkout(Model model, @SessionAttribute("shopping_cart") List<CartItem> cart,
-                           Principal principal, double discountMultiplier, Billing billingForm) throws MessagingException {
+                           Principal principal, double discountMultiplier, Billing billingForm) {
         double totalPrice = calculateTotalPrice(cart);
 
         Order order = new Order();

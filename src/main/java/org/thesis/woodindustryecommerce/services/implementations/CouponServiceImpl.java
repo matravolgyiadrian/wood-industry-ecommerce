@@ -13,10 +13,12 @@ import java.util.NoSuchElementException;
 public class CouponServiceImpl implements CouponService {
 
     private final CouponRepository couponRepository;
+    private final EmailSenderService emailSenderService;
 
     @Autowired
-    public CouponServiceImpl(CouponRepository couponRepository) {
+    public CouponServiceImpl(CouponRepository couponRepository, EmailSenderService emailSenderService) {
         this.couponRepository = couponRepository;
+        this.emailSenderService = emailSenderService;
     }
 
     @Override
@@ -36,6 +38,7 @@ public class CouponServiceImpl implements CouponService {
 
     @Override
     public Coupon save(Coupon coupon) {
+        emailSenderService.sendPromotionNotification(coupon);
         return couponRepository.save(coupon);
     }
 

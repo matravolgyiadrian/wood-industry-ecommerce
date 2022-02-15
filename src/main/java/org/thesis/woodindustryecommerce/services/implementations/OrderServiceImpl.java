@@ -8,7 +8,6 @@ import org.thesis.woodindustryecommerce.model.Status;
 import org.thesis.woodindustryecommerce.repository.OrderRepository;
 import org.thesis.woodindustryecommerce.services.OrderService;
 
-import javax.mail.MessagingException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -52,7 +51,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void changeStatus(Long id) throws MessagingException {
+    public void changeStatus(Long id) {
         Order order = orderRepository.findById(id).orElseThrow(NoSuchElementException::new);
         if (order.getStatus().ordinal() != 2) {
             order.setStatus(Status.values()[order.getStatus().ordinal() + 1]);

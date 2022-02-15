@@ -12,7 +12,6 @@ import org.thesis.woodindustryecommerce.repository.OrderRepository;
 import org.thesis.woodindustryecommerce.services.implementations.EmailSenderService;
 import org.thesis.woodindustryecommerce.services.implementations.OrderServiceImpl;
 
-import javax.mail.MessagingException;
 import java.time.*;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -101,7 +100,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void testChangeStatusShouldChangeTheStatus() throws MessagingException {
+    void testChangeStatusShouldChangeTheStatus() {
         //Given
         Order order = Order.builder()
                 .id(10L)
@@ -121,7 +120,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void testChangeStatusShouldNotChangeTheStatus() throws MessagingException{
+    void testChangeStatusShouldNotChangeTheStatus(){
         //Given
         Order order = Order.builder()
                 .id(10L)
