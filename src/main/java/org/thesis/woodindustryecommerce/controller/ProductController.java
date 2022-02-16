@@ -29,8 +29,12 @@ public class ProductController {
     }
 
     @GetMapping("/product/all")
-    public String getAll(Model model){
-        model.addAttribute("products", productService.findAll());
+    public String getAll(Model model, String keyword){
+        if(keyword != null){
+            model.addAttribute("products", productService.findByKeyword(keyword));
+        } else {
+            model.addAttribute("products", productService.findAll());
+        }
         model.addAttribute("productForm", new Product());
 
         return "product";

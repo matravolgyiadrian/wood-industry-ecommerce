@@ -24,17 +24,12 @@ public class OrderController {
 
     @GetMapping("/order/all")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public String getAllOrder(Model model) {
-        model.addAttribute("orders", orderService.findAll());
-
-        return "order";
-    }
-
-    @GetMapping("/order/my")
-    @PreAuthorize("isAuthenticated()")
-    public String getMyOrders(Model model, Principal principal) {
-        model.addAttribute("orders", orderService.findByCustomer(principal.getName()));
-        model.addAttribute("myOrder", true);
+    public String getAllOrder(Model model, String keyword) {
+        if(keyword != null){
+            model.addAttribute("orders", orderService.findByKeyword(keyword));
+        } else {
+            model.addAttribute("orders", orderService.findAll());
+        }
 
         return "order";
     }

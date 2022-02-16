@@ -10,6 +10,7 @@ import java.util.List;
 @Service
 public interface ProductService {
     List<Product> findAll();
+    List<Product> findByKeyword(String keyword);
     Product findById(Long id);
     Product save(Product product);
     void delete(Long id);

@@ -37,6 +37,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<Product> findByKeyword(String keyword) {
+        return productRepository.findByKeyword(keyword);
+    }
+
+    @Override
     public Product findById(Long id) {
         return productRepository.findById(id).orElseThrow(NoSuchElementException::new);
     }

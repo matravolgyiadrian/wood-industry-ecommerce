@@ -62,3 +62,98 @@ button, button:focus{
     cursor: inherit !important;
     display: block;
 }
+
+.search-form{
+    position: relative;
+    width: 30rem;
+    border-radius: .3rem;
+    background-color: #62a794;
+}
+
+.keyword, .keyword-btn{
+    height: 2.5rem;
+    border: 0;
+}
+
+.keyword{
+    outline: 0;
+    width: 100%;
+    padding: 0 .8rem;
+    border-radius: .3rem;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    transition: all .3s cubic-bezier(0, 0, 0.43, 1.49);
+    transition-property: width, border-radius;
+    z-index: 1;
+    position: relative;
+}
+
+.keyword-btn{
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 3rem;
+    font-weight: bold;
+    background-color: #62a794;
+    border-radius: 0 5px 5px 0;
+}
+
+.keyword:not(:-moz-placeholder-shown){
+    border-radius: .3rem 0 0 .3rem;
+    width: calc(100% - 3rem);
+}
+
+.keyword:not(:-ms-input-placeholder){
+    border-radius: .3rem 0 0 .3rem;
+    width: calc(100% - 3rem);
+}
+
+.keyword:not(:placeholder-shown){
+    border-radius: .3rem 0 0 .3rem;
+    width: calc(100% - 3rem);
+}
+
+.keyword:not(:-moz-placeholder-shown) + .keyword-btn{
+    display:block;
+}
+
+.keyword:not(:-ms-input-placeholder) + .keyword-btn{
+    display:block;
+}
+
+.keyword:not(:placeholder-shown) + .keyword-btn{
+    display:block;
+}
+
+.keyword:not(:-moz-placeholder-shown) ~ .reset-btn{
+    transform: translate(-3rem, -50%);
+    margin-right: .6rem;
+}
+
+.keyword:not(:-ms-input-placeholder) ~ .reset-btn{
+    transform: translate(-3rem, -50%);
+    margin-right: .6rem;
+}
+
+.keyword:not(:placeholder-shown) ~ .reset-btn{
+    transform: translate(-3rem, -50%);
+    margin-right: .6rem;
+}
+
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration {
+  -webkit-appearance:none;
+}
+
+.reset-btn{
+    z-index: 1;
+    cursor: pointer;
+    transition: all .3s cubic-bezier(0, 0, 0.43, 1.49);
+    transition-property: transform;
+    transform: translate(-50%, -50%);
+    margin-right: .3rem;
+}

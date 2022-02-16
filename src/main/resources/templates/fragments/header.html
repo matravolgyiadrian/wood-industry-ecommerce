@@ -9,14 +9,52 @@
                 <div class="hamburger"></div>
             </div>
         </button>
-        <h1 class="text-white text-center w-100">
-            <a class="unstyled-link" href="/home">
+        <th:block th:if="${#httpServletRequest.requestURI == '/home' ||
+        #httpServletRequest.requestURI == '/' ||
+        #httpServletRequest.requestURI == '/index'}">
+            <form th:action="@{/home}" method="get" class="search-form">
+                <input type="search" name="keyword" class="keyword" placeholder="Search products...">
+                <button type="submit" class="keyword-btn">GO</button>
+                <a th:if="${param.keyword ne null}" th:href="@{/home}" class="reset-btn position-absolute end-0 top-50" data-toggle="tooltip" data-placement="bottom" title="Clear search">
+                    <i class="fas fa-times text-black"></i>
+                </a>
+            </form>
+        </th:block>
+        <th:block th:if="${#strings.contains(#httpServletRequest.requestURI, 'product')}">
+            <form th:action="@{/product/all}" method="get" class="search-form">
+                <input type="search" name="keyword" class="keyword" placeholder="Search products...">
+                <button type="submit" class="keyword-btn">GO</button>
+                <a th:if="${param.keyword ne null}" th:href="@{/product/all}" class="reset-btn position-absolute end-0 top-50" data-toggle="tooltip" data-placement="bottom" title="Clear search">
+                    <i class="fas fa-times text-black"></i>
+                </a>
+            </form>
+        </th:block>
+        <th:block th:if="${#strings.contains(#httpServletRequest.requestURI, 'order')}">
+            <form th:action="@{/order/all}" method="get" class="search-form">
+                <input type="search" name="keyword" class="keyword" placeholder="Search order...">
+                <button type="submit" class="keyword-btn">GO</button>
+                <a th:if="${param.keyword ne null}" th:href="@{/order/all}" class="reset-btn position-absolute end-0 top-50" data-toggle="tooltip" data-placement="bottom" title="Clear search">
+                    <i class="fas fa-times text-black"></i>
+                </a>
+            </form>
+        </th:block>
+        <th:block th:if="${#strings.contains(#httpServletRequest.requestURI, 'coupon')}">
+            <form th:action="@{/coupon/all}" method="get" class="search-form">
+                <input type="search" name="keyword" class="keyword" placeholder="Search coupons...">
+                <button type="submit" class="keyword-btn">GO</button>
+                <a th:if="${param.keyword ne null}" th:href="@{/coupon/all}" class="reset-btn position-absolute end-0 top-50" data-toggle="tooltip" data-placement="bottom" title="Clear search">
+                    <i class="fas fa-times text-black"></i>
+                </a>
+            </form>
+        </th:block>
+        <h1 class="text-white position-absolute top-50 start-50 translate-middle">
+            <a class="unstyled-link" id="site-name" href="/home">
                 <span style="cursor: pointer;"> Ecommerce</span>
             </a>
         </h1>
-        <button onclick="location.href='/cart/details'" class="cart-icon position-relative">
+        <button onclick="location.href='/cart/details'" class="cart-icon position-absolute end-0">
             <i class="fas fa-shopping-cart fa-2x text-white pe-4"></i>
-            <span th:text="${session.shopping_cart?.size()} ?: 0" class="badge badge-danger position-absolute"></span>
+            <span class="badge badge-danger position-absolute mt-1">0</span>
         </button>
     </div>
 

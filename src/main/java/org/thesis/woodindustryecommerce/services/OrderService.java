@@ -12,6 +12,7 @@ public interface OrderService {
     List<Order> findByCustomer(String username);
     List<Order> findByStatus(Status status);
     List<Order> findByCustomerAndStatus(String username, Status status);
+    List<Order> findByKeyword(String keyword);
     Order findById(Long id);
     void changeStatus(Long id);
     void save(Order order);

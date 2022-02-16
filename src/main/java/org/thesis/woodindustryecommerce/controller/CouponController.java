@@ -21,8 +21,12 @@ public class CouponController {
     }
 
     @GetMapping("/coupon/all")
-    public String getCoupons(Model model) {
-        model.addAttribute("coupons", couponService.findAll());
+    public String getCoupons(Model model, String keyword) {
+        if(keyword != null){
+            model.addAttribute("coupons", couponService.findByKeyword(keyword));
+        } else {
+            model.addAttribute("coupons", couponService.findAll());
+        }
 
         return "coupon";
     }
