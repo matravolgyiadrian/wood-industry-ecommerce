@@ -37,6 +37,8 @@ class HomeControllerTest {
                 .name("Chair")
                 .price(100)
                 .stock(100)
+                .reorderThreshold(10)
+                .stopOrder(false)
                 .build();
         Mockito.when(productService.findAll()).thenReturn(List.of(chair));
 

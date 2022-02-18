@@ -62,7 +62,7 @@ class ProductServiceTest {
     @Test
     void testFindByIdShouldReturnProduct() {
         //Given
-        Product chair = Product.builder().name("Chair").price(10000).stock(200).build();
+        Product chair = Product.builder().name("Chair").price(10000).stock(200).reorderThreshold(10).stopOrder(false).build();
         Mockito.when(productRepository.findById(10L)).thenReturn(Optional.ofNullable(chair));
 
         //When
@@ -85,11 +85,15 @@ class ProductServiceTest {
                 .price(10000)
                 .stock(100)
                 .image(new MockMultipartFile("foo", "foo".getBytes()))
+                .reorderThreshold(10)
+                .stopOrder(false)
                 .build());
         Product productTwo = underTest.save(Product.builder()
                 .name("Chair")
                 .price(10000)
                 .stock(100)
+                .reorderThreshold(10)
+                .stopOrder(false)
                 .build());
 
         //Then
@@ -101,6 +105,8 @@ class ProductServiceTest {
                 .name("Chair")
                 .price(10000)
                 .stock(100)
+                .reorderThreshold(10)
+                .stopOrder(false)
                 .build(), productTwo);
     }
 

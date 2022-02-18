@@ -16,7 +16,6 @@ import org.thesis.woodindustryecommerce.services.UserService;
 import org.thesis.woodindustryecommerce.services.implementations.EmailSenderService;
 
 import java.security.Principal;
-import java.util.LinkedList;
 import java.util.List;
 
 @Controller
@@ -43,7 +42,7 @@ public class CartController {
     }
 
     @PostMapping("/cart/add")
-    public ModelAndView addToCart(Long id, int quantity, Model model, @SessionAttribute("shopping_cart") List<CartItem> cart, RedirectAttributes redirectAttr) {
+    public ModelAndView addToCart(Long id, int quantity, @SessionAttribute("shopping_cart") List<CartItem> cart, RedirectAttributes redirectAttr) {
 
         Product product = productService.findById(id);
         CartItem cartItem = new CartItem(product, quantity);
@@ -54,17 +53,13 @@ public class CartController {
             return new ModelAndView("redirect:/home");
         }
 
-        model.addAttribute("shopping_cart", cart);
         return new ModelAndView("redirect:/home");
     }
 
     @PostMapping("/cart/remove")
-    public String removeFromCart(Long id, Model model, @SessionAttribute("shopping_cart") List<CartItem> cart) {
+    public String removeFromCart(Long id, @SessionAttribute("shopping_cart") List<CartItem> cart) {
 
         cart.removeIf(item -> item.getProduct().getId().equals(id));
-
-        model.addAttribute("shopping_cart", cart);
-
 
         return "cart";
     }
@@ -77,14 +72,16 @@ public class CartController {
 
     @PostMapping("/cart/item/quantity")
     public ResponseEntity<?> cartItemQuantityHandler(@SessionAttribute("shopping_cart") List<CartItem> cart,
-                                                     boolean increment, long id, Model model){
+                                                     boolean increment, long id){
         for(CartItem item: cart){
             if(item.getProduct().getId() == id){
+                //Checks if stock is enough
+                if(increment && item.getQuantity()+1 > item.getProduct().getStock()){
+                    return ResponseEntity.ok("0");
+                }
                 item.setQuantity(increment?item.getQuantity()+1: item.getQuantity()-1);
             }
         }
-
-        model.addAttribute("shopping_cart", cart);
 
         return ResponseEntity.ok(increment?"++":"--");
     }
@@ -109,7 +106,7 @@ public class CartController {
     }
 
     @PostMapping("/cart/checkout")
-    public String checkout(Model model, @SessionAttribute("shopping_cart") List<CartItem> cart,
+    public String checkout(@SessionAttribute("shopping_cart") List<CartItem> cart,
                            Principal principal, double discountMultiplier, Billing billingForm) {
         double totalPrice = calculateTotalPrice(cart);
 
@@ -127,7 +124,7 @@ public class CartController {
         for (CartItem item : cart) {
             Product product = item.getProduct();
             product.setStock(product.getStock() - item.getQuantity());
-            if(product.getStock() <= 10){
+            if(!product.isStopOrder() && product.getStock() <= product.getReorderThreshold()){
                 product.setStock(200);
                 emailSenderService.sendProductReorderEmail(product.getName(), 200);
             }
@@ -137,16 +134,19 @@ public class CartController {
         orderService.save(order);
 
         emailSenderService.sendTemplateEmail(order);
-        model.addAttribute("shopping_cart", new LinkedList<>());
+        cart.clear();
 
         return "redirect:/home";
     }
 
     private boolean addItem(List<CartItem> cart, CartItem item) {
         for (CartItem cartItem : cart) {
-            if (cartItem.getProduct().getId().equals(item.getProduct().getId())) {
+            if (cartItem.getProduct().getId().equals(item.getProduct().getId()) &&
+                    cartItem.getQuantity() + item.getQuantity() <= cartItem.getProduct().getStock()) {
                 cartItem.setQuantity(cartItem.getQuantity() + item.getQuantity());
-                return cartItem.getQuantity() <= cartItem.getProduct().getStock();
+                return true;
+            } else{
+                return false;
             }
         }
         if (item.getQuantity() > item.getProduct().getStock()) {

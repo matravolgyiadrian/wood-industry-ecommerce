@@ -20,6 +20,8 @@ public class Product implements Serializable {
     private String name;
     private double price;
     private int stock;
+    private int reorderThreshold;
+    private boolean stopOrder;
     @Transient
     private transient MultipartFile image;
     private String imageUrl;

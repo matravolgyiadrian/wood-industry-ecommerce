@@ -1,17 +1,11 @@
 package org.thesis.woodindustryecommerce.services.implementations;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import org.thesis.woodindustryecommerce.model.Product;
 import org.thesis.woodindustryecommerce.repository.ProductRepository;
 import org.thesis.woodindustryecommerce.services.ProductService;
@@ -22,7 +16,6 @@ public class ProductServiceImpl implements ProductService {
 
     private final CloudinaryService cloudinaryService;
 
-    private final AtomicInteger counter = new AtomicInteger();
     private final ProductRepository productRepository;
 
     @Autowired

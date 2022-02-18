@@ -162,7 +162,7 @@ class UserControllerTest {
                 .customer("jondoe")
                 .status(Status.PENDING)
                 .products(List.of(
-                        new CartItem(Product.builder().name("Chair").price(100D).stock(100).build(),2)
+                        new CartItem(Product.builder().name("Chair").price(100D).stock(100).reorderThreshold(10).stopOrder(false).build(),2)
                 )).build();
         Mockito.when(userService.findByUsername("jondoe")).thenReturn(jondoe);
         Mockito.when(orderService.findByCustomer("jondoe")).thenReturn(List.of(order));

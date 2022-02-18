@@ -38,7 +38,7 @@ class OrderControllerTest {
                 .customer("jondoe")
                 .status(Status.PENDING)
                 .shippingAddress("address")
-                .products(List.of(new CartItem(Product.builder().name("Chair").price(100).stock(100).build(), 1)))
+                .products(List.of(new CartItem(Product.builder().name("Chair").price(100).stock(100).reorderThreshold(10).stopOrder(false).build(), 1)))
                 .totalPrice(100)
                 .build();
         Mockito.when(orderService.findAll()).thenReturn(List.of(order));
@@ -48,29 +48,6 @@ class OrderControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("order"))
                 .andExpect(model().attribute("orders", List.of(order)));
-
-        //Then
-    }
-
-    @Test
-    @WithMockUser(username = "jondoe")
-    void testGetMyOrdersShouldAddAttributeCurrentUsersOrders() throws Exception{
-        //Given
-        Order order = Order.builder()
-                .customer("jondoe")
-                .status(Status.PENDING)
-                .shippingAddress("address")
-                .products(List.of(new CartItem(Product.builder().name("Chair").price(100).stock(100).build(), 1)))
-                .totalPrice(100)
-                .build();
-        Mockito.when(orderService.findByCustomer("jondoe")).thenReturn(List.of(order));
-
-        //When
-        mockMvc.perform(get("/order/my"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("order"))
-                .andExpect(model().attribute("orders", List.of(order)))
-                .andExpect(model().attribute("myOrder", true));
 
         //Then
     }

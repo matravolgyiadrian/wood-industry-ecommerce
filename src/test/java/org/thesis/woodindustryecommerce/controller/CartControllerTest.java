@@ -17,6 +17,7 @@ import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfig
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.thesis.woodindustryecommerce.model.*;
 import org.thesis.woodindustryecommerce.model.binding.Billing;
@@ -32,6 +33,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.setup.SharedHttpSessionConfigurer.sharedHttpSession;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @WebMvcTest(CartController.class)
 @ActiveProfiles("test")
@@ -69,7 +72,7 @@ class CartControllerTest {
     @Test
     void testAddToCartShouldAddItemToCart() throws Exception {
         //Given
-        Product chair = Product.builder().name("Chair").price(100).stock(100).build();
+        Product chair = Product.builder().name("Chair").price(100).stock(100).reorderThreshold(10).stopOrder(false).build();
         Mockito.when(productService.findById(1L)).thenReturn(chair);
         List<CartItem> expectedCart = new LinkedList<>(List.of(new CartItem(chair, 1)));
         session.setAttribute("shopping_cart", new LinkedList<>());
@@ -91,7 +94,7 @@ class CartControllerTest {
     @Test
     void testAddToCartShouldNotAddToCart_WhenThereIsNoOneInStock() throws Exception {
         //Given
-        Product chair = Product.builder().name("Chair").price(100).stock(0).build();
+        Product chair = Product.builder().name("Chair").price(100).stock(0).reorderThreshold(10).stopOrder(false).build();
         Mockito.when(productService.findById(1L)).thenReturn(chair);
         session.setAttribute("shopping_cart", new LinkedList<>());
 
@@ -114,7 +117,7 @@ class CartControllerTest {
     @Test
     void testRemoveFromCartShouldRemoveItemFromCart() throws Exception{
         //Given
-        Product chair = new Product(1L, "Chair", 100, 100, null, "");
+        Product chair = new Product(1L, "Chair", 100, 100, 10, false, null, "");
         List<CartItem> cart = new LinkedList<>(List.of(new CartItem(chair, 1)));
         session.setAttribute("shopping_cart", cart);
 
@@ -135,7 +138,7 @@ class CartControllerTest {
     @Test
     void testCartDetailsShouldRenderCartDetails() throws Exception{
         //Given
-        Product chair = new Product(1L, "Chair", 100, 100, null, "");
+        Product chair = new Product(1L, "Chair", 100, 100, 10, false, null, "");
         List<CartItem> cart = new LinkedList<>(List.of(new CartItem(chair, 2)));
         session.setAttribute("shopping_cart", cart);
 
@@ -150,9 +153,63 @@ class CartControllerTest {
     }
 
     @Test
+    void testCartItemQuantityHandlerShouldReturnIncrementString_WhenItemQtyLessThanOrEqualToProductStock() throws Exception{
+        //Given
+        Product chair = new Product(1L, "Chair", 100, 100, 10, false, null, "");
+        List<CartItem> cart = new LinkedList<>(List.of(new CartItem(chair, 2)));
+        session.setAttribute("shopping_cart", cart);
+
+        //When
+        MvcResult result = mockMvc.perform(post("/cart/item/quantity").session(session)
+                        .param("increment", "true")
+                        .param("id", "1"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        //Then
+        assertEquals("++", result.getResponse().getContentAsString());
+    }
+
+    @Test
+    void testCartItemQuantityHandlerShouldReturnDecrementString_WhenItemQtyLessThanOrEqualToProductStock() throws Exception{
+        //Given
+        Product chair = new Product(1L, "Chair", 100, 100, 10, false, null, "");
+        List<CartItem> cart = new LinkedList<>(List.of(new CartItem(chair, 2)));
+        session.setAttribute("shopping_cart", cart);
+
+        //When
+        MvcResult result = mockMvc.perform(post("/cart/item/quantity").session(session)
+                        .param("increment", "false")
+                        .param("id", "1"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        //Then
+        assertEquals("--", result.getResponse().getContentAsString());
+    }
+
+    @Test
+    void testCartItemQuantityHandlerShouldReturnZero_WhenStockNotEnough() throws Exception{
+        //Given
+        Product chair = new Product(1L, "Chair", 100, 2, 10, false, null, "");
+        List<CartItem> cart = new LinkedList<>(List.of(new CartItem(chair, 2)));
+        session.setAttribute("shopping_cart", cart);
+
+        //When
+        MvcResult result = mockMvc.perform(post("/cart/item/quantity").session(session)
+                        .param("increment", "true")
+                        .param("id", "1"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        //Then
+        assertEquals("0", result.getResponse().getContentAsString());
+    }
+
+    @Test
     void testGETCheckoutShouldRenderCheckoutPageWithNewUserInModelAttribute() throws Exception{
         //Given
-        Product chair = new Product(1L, "Chair", 100, 100, null, "");
+        Product chair = new Product(1L, "Chair", 100, 100, 10, false, null, "");
         List<CartItem> cart = new LinkedList<>(List.of(new CartItem(chair, 2)));
         session.setAttribute("shopping_cart", cart);
 
@@ -170,7 +227,7 @@ class CartControllerTest {
     @WithMockUser(username = "jondoe")
     void testGETCheckoutShouldRenderCheckoutPageWithLoggedInUserInModelAttribute() throws Exception{
         //Given
-        Product chair = new Product(1L, "Chair", 100, 100, null, "");
+        Product chair = new Product(1L, "Chair", 100, 100, 10, false, null, "");
         List<CartItem> cart = new LinkedList<>(List.of(new CartItem(chair, 2)));
         session.setAttribute("shopping_cart", cart);
         User jondoe = User.builder()
@@ -210,7 +267,7 @@ class CartControllerTest {
     @WithMockUser(username = "jondoe")
     void testPOSTCheckoutShouldProcessCheckoutAndSaveOrder() throws Exception{
         //Given
-        Product chair = new Product(1L, "Chair", 100, 100, null, "");
+        Product chair = new Product(1L, "Chair", 100, 100, 10, false, null, "");
         List<CartItem> cart = new LinkedList<>(List.of(new CartItem(chair, 2)));
         session.setAttribute("shopping_cart", cart);
         Order order = Order.builder()
@@ -250,7 +307,7 @@ class CartControllerTest {
     @Test
     void testPOSTCheckoutShouldProcessCheckoutAndSaveOrder_WithGuest() throws Exception{
         //Given
-        Product chair = new Product(1L, "Chair", 100, 100, null, "");
+        Product chair = new Product(1L, "Chair", 100, 100, 10, false, null, "");
         List<CartItem> cart = new LinkedList<>(List.of(new CartItem(chair, 2)));
         session.setAttribute("shopping_cart", cart);
         Order order = Order.builder()

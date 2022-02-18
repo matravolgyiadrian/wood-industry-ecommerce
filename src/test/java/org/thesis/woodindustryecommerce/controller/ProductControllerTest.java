@@ -40,7 +40,7 @@ class ProductControllerTest {
     @WithMockUser(authorities = "ROLE_ADMIN")
     void testGetAllShouldAddAttributesProductsAndProductForm() throws Exception{
         //Given
-        List<Product> products = List.of(Product.builder().name("Chair").price(100).stock(100).build());
+        List<Product> products = List.of(Product.builder().name("Chair").price(100).stock(100).reorderThreshold(10).stopOrder(false).build());
         Mockito.when(productService.findAll()).thenReturn(products);
 
         //When
@@ -57,7 +57,7 @@ class ProductControllerTest {
     @WithMockUser(authorities = "ROLE_ADMIN")
     void testGetNewProductShouldAddAttributes() throws Exception{
         //Given
-        List<Product> products = List.of(Product.builder().name("Chair").price(100).stock(100).build());
+        List<Product> products = List.of(Product.builder().name("Chair").price(100).stock(100).reorderThreshold(10).stopOrder(false).build());
         Mockito.when(productService.findAll()).thenReturn(products);
 
         //When
@@ -65,7 +65,7 @@ class ProductControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("product"))
                 .andExpect(model().attribute("products", products))
-                .andExpect(model().attribute("productForm", new Product()))
+                .andExpect(model().attribute("productForm", Product.builder().reorderThreshold(10).build()))
                 .andExpect(model().attribute("form", true))
                 .andExpect(model().attribute("method", "new"));
 
@@ -90,7 +90,7 @@ class ProductControllerTest {
 
         //Then
         Mockito.verify(productService, Mockito.times(1))
-                .save(Product.builder().name("Chair").stock(100).price(100).build());
+                .save(Product.builder().name("Chair").stock(100).price(100).reorderThreshold(10).stopOrder(false).build());
     }
 
 
@@ -99,7 +99,7 @@ class ProductControllerTest {
     @WithMockUser(authorities = "ROLE_ADMIN")
     void testGetEditProductShouldAddAttributes() throws Exception{
         //Given
-        Product chair = new Product(1L, "Chair", 100, 100, null, "");
+        Product chair = new Product(1L, "Chair", 100, 100, 10, false, null, "");
         List<Product> products = List.of(chair);
         Mockito.when(productService.findAll()).thenReturn(products);
         Mockito.when(productService.findById(1L)).thenReturn(chair);
@@ -120,7 +120,8 @@ class ProductControllerTest {
     @WithMockUser(authorities = "ROLE_ADMIN")
     void testPostEditProductShouldEditProduct() throws Exception {
         //Given
-        Product chair = new Product(1L, "Chair", 100, 100, null, "");
+        Product chair = new Product(1L, "Chair", 100, 100, 10, false, null, "");
+        Mockito.when(productService.findById(1L)).thenReturn(chair);
 
         //When
         mockMvc.perform(post("/product/edit/1")
@@ -128,7 +129,8 @@ class ProductControllerTest {
                         .content(EntityUtils.toString(new UrlEncodedFormEntity(Arrays.asList(
                                 new BasicNameValuePair("name", "Chair"),
                                 new BasicNameValuePair("price", "100"),
-                                new BasicNameValuePair("stock", "200")
+                                new BasicNameValuePair("stock", "200"),
+                                new BasicNameValuePair("reorderThreshold", "50")
                         )))))
                 .andExpect(redirectedUrl("/product/all"))
                 .andExpect(view().name("redirect:/product/all"));

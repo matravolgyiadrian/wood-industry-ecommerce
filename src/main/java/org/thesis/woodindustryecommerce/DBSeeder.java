@@ -42,6 +42,8 @@ public class DBSeeder {
                 .name("Wooden chair")
                 .price(50000D)
                 .stock(200)
+                .stopOrder(false)
+                .reorderThreshold(10)
                 .build();
         this.productRepository.save(chair);
 
