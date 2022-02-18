@@ -20,6 +20,7 @@
                 <tr>
                     <th>Coupon Code</th>
                     <th>Amount Discount</th>
+                    <th>Expiration Date</th>
                     <th></th>
                     <th></th>
 
@@ -29,6 +30,7 @@
                 <tr th:each="coupon: ${coupons}">
                     <td th:text="${coupon.couponCode}"></td>
                     <td th:text="${coupon.discountAmount}"></td>
+                    <td th:text="${coupon.expirationDate ne null}? ${coupon.expirationDate} : 'None'"></td>
                     <td><a th:href="${'/coupon/edit/'+ coupon.getId()}" class="btn btn-outline-dark">Edit item</a></td>
                     <td>
                         <form th:action="${'/coupon/delete/' + coupon.getId()}" method="post">
@@ -48,6 +50,10 @@
                 <div class="form-group">
                     <label for="discountAmount">Discount Amount</label>
                     <input type="number" step="1" min=0 max="100" class="form-control" id="discountAmount" th:field="*{discountAmount}" />
+                </div>
+                <div class="form-group">
+                    <label for="expirationDate">Expiration date</label>
+                    <input type="date" class="form-control" id="expirationDate" th:field="*{expirationDate}" />
                 </div>
                 <input th:if="${isNew}" type="submit" class="btn btn-outline-dark" th:action="@{/coupon/new}" th:value="Confirm">
                 <input th:if="${isEdit}" type="submit" class="btn btn-outline-dark" th:action="@{/coupon/edit/{id}}" th:value="Edit">

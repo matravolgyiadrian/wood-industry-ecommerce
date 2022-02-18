@@ -97,6 +97,9 @@ public class EmailSenderService {
                     .filter(user -> !Objects.equals(user.getUsername(), "admin"))
                     .map(User::getEmail)
                     .toArray(String[]::new);
+            if(emails.length == 0){
+                return;
+            }
 
             helper.setTo(emails);
             helper.setText("<h2>Hi!</h2>" +

@@ -13,5 +13,4 @@ public interface CouponService {
     List<Coupon> findByKeyword(String keyword);
     Coupon save(Coupon coupon);
     void delete(Long id);
-    Coupon validate(String code);
 }

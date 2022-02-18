@@ -72,7 +72,7 @@ public class CouponController {
 
     @PostMapping("/coupon/edit/{id}")
     public String editCoupon(@PathVariable Long id, @ModelAttribute Coupon couponForm, Model model) {
-        Coupon coupon = new Coupon(id, couponForm.getCouponCode().toUpperCase(), couponForm.getDiscountAmount());
+        Coupon coupon = new Coupon(id, couponForm.getCouponCode().toUpperCase(), couponForm.getDiscountAmount(), couponForm.getExpirationDate());
         Set<String> codes = couponService.findAll().stream()
                 .map(Coupon::getCouponCode)
                 .collect(Collectors.toSet());

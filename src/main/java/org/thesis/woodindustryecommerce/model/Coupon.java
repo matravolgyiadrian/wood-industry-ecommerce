@@ -4,6 +4,7 @@ import lombok.*;
 import org.thesis.woodindustryecommerce.model.websocket.CouponMessage;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Data
 @Entity
@@ -22,6 +23,8 @@ public class Coupon {
 
     @Column(nullable = false)
     private int discountAmount;
+
+    private LocalDate expirationDate;
 
     public double getDiscountMultiplier() {
         return 1D - (double) discountAmount / 100D;

@@ -51,13 +51,4 @@ public class CouponServiceImpl implements CouponService {
     public void delete(Long id) {
         couponRepository.deleteById(id);
     }
-
-    @Override
-    public Coupon validate(String code) {
-        Coupon coupon = this.findByCouponCode(code.toUpperCase());
-        if(coupon != null){
-            return coupon;
-        }
-        return Coupon.builder().discountAmount(0).build();
-    }
 }

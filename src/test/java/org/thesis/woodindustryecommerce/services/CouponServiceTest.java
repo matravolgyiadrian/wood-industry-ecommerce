@@ -11,7 +11,6 @@ import org.thesis.woodindustryecommerce.repository.CouponRepository;
 import org.thesis.woodindustryecommerce.services.implementations.CouponServiceImpl;
 import org.thesis.woodindustryecommerce.services.implementations.EmailSenderService;
 
-import javax.mail.MessagingException;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -103,31 +102,5 @@ class CouponServiceTest {
 
         //Then
         Mockito.verify(couponRepository, Mockito.times(1)).deleteById(0L);
-    }
-
-    @Test
-    void testValidateShouldReturnCouponWithZeroDiscount_WhenCodeDoesntExists() {
-        //Given
-        Mockito.when(couponRepository.findByCouponCode("CODE")).thenReturn(null);
-
-        //When
-        Coupon retrievedCoupon = underTest.validate("CODE");
-
-        //Then
-        Assertions.assertEquals(Coupon.builder()
-                .discountAmount(0).build(), retrievedCoupon);
-    }
-
-    @Test
-    void testValidateShouldReturnCoupon(){
-        //Given
-        Coupon coupon = Coupon.builder().couponCode("CODE").discountAmount(30).build();
-        Mockito.when(couponRepository.findByCouponCode("CODE")).thenReturn(coupon);
-
-        //When
-        Coupon retrievedCoupon = underTest.validate("CODE");
-
-        //Then
-        Assertions.assertEquals(coupon, retrievedCoupon);
     }
 }

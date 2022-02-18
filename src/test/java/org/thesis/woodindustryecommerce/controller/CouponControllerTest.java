@@ -128,7 +128,7 @@ class CouponControllerTest {
     @Test
     void testRenderEditCouponShouldAddAttributes() throws Exception{
         //Given
-        Coupon coupon = new Coupon(1L, "CODE20", 20);
+        Coupon coupon = new Coupon(1L, "CODE20", 20, null);
         Mockito.when(couponService.findAll()).thenReturn(List.of(coupon));
         Mockito.when(couponService.findById(1L)).thenReturn(coupon);
 
@@ -147,7 +147,7 @@ class CouponControllerTest {
     @Test
     void testEditCouponShouldEditCoupon() throws Exception {
         //Given
-        Coupon coupon = new Coupon(1L, "CODE20", 20);
+        Coupon coupon = new Coupon(1L, "CODE20", 20, null);
         Mockito.when(couponService.findAll()).thenReturn(List.of(coupon));
         Mockito.when(couponService.findById(1L)).thenReturn(coupon);
 
