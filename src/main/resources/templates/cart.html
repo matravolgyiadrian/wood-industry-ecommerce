@@ -61,6 +61,14 @@
         <a href="/cart/checkout" class="btn btn-success mt-4 fs-5" style="width: min-content;">Checkout</a>
     </div>
 </div>
+<div class="toast position-fixed bottom-0 start-0 p-2 fs-5 m-2 text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+    <div class="d-flex">
+        <div class="toast-body">
+            There is no more in stock!
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+</div>
 <script type="text/javascript" th:src="@{/js/cart.js}"></script>
 </body>
 </html>

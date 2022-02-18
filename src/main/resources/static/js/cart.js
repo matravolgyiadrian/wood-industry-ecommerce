@@ -16,13 +16,19 @@ function handleQuantity(event){
             qty++;
             subTotal += productPrice;
             productTotalPrice += productPrice;
-        } else {
+        } else if(data == "--"){
             if(qty == 1){
                 $("#delete-"+id).submit();
             }
             qty--;
             subTotal -= productPrice;
             productTotalPrice -= productPrice;
+        } else {
+            var toastElList = [].slice.call(document.querySelectorAll('.toast'));
+            var toastList = toastElList.map(function(toastEl) {
+                return new bootstrap.Toast(toastEl)
+            })
+            toastList.forEach(toast => toast.show());
         }
 
         $("#qty-"+id).html(qty);
