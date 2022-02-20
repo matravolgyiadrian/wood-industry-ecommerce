@@ -12,5 +12,4 @@ public interface CouponService {
     Coupon findByCouponCode(String code);
     Coupon save(Coupon coupon);
     void delete(Long id);
-    Coupon validate(String code);
 }

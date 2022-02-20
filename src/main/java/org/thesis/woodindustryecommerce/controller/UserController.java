@@ -1,5 +1,6 @@
 package org.thesis.woodindustryecommerce.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -7,13 +8,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.thesis.woodindustryecommerce.model.User;
 import org.thesis.woodindustryecommerce.services.OrderService;
 import org.thesis.woodindustryecommerce.services.UserService;
 
 import java.security.Principal;
 
+@Slf4j
 @Controller
 public class UserController {
 
@@ -28,12 +29,7 @@ public class UserController {
 
     @GetMapping("/login")
     @PreAuthorize("isAnonymous()")
-    public String login(@RequestParam(required = false) String error, Model model) {
-        if (error != null) {
-            model.addAttribute("error", "Error");
-        }
-        model.addAttribute("method", "login");
-
+    public String login() {
         return "login";
     }
 
@@ -49,11 +45,15 @@ public class UserController {
     public String register(@ModelAttribute User userForm, Model model) {
         if (userService.findByUsername(userForm.getUsername()) != null) {
             model.addAttribute("usernameExists", true);
+            userForm.setPassword("");
+            model.addAttribute("userForm", userForm);
             return "register";
         }
 
         if (userService.findByEmail(userForm.getEmail()) != null) {
             model.addAttribute("emailExists", true);
+            userForm.setPassword("");
+            model.addAttribute("userForm", userForm);
             return "register";
         }
 
@@ -63,15 +63,23 @@ public class UserController {
     }
 
     @GetMapping("/user-details")
-    public String userDetails(Model model, Principal principal){
+    public String userDetails(Model model, Principal principal, String keyword){
         model.addAttribute("user", userService.findByUsername(principal.getName()));
-        model.addAttribute("orders", orderService.findByCustomer(principal.getName()));
+
+        if(keyword != null){
+            model.addAttribute("orders", orderService.findByKeyword(keyword));
+        } else {
+            model.addAttribute("orders", orderService.findByCustomer(principal.getName()));
+        }
+
         return "myprofile";
     }
 
     @GetMapping("/user/edit")
     public String editUser(Model model, Principal principal){
         model.addAttribute("userToEdit", userService.findByUsername(principal.getName()));
+
+        log.info("user to edit before edit: {}", userService.findByUsername(principal.getName()).toString());
 
         return "edit_user";
     }
@@ -80,9 +88,12 @@ public class UserController {
     public String editUser(@ModelAttribute User userToEdit, Model model, Principal principal) {
 
         userToEdit.setUsername(principal.getName());
+        log.info("User to edit form: {}", userToEdit);
 
-        if (userService.findByEmail(userToEdit.getEmail()) != null) {
+        if (userService.findByEmail(userToEdit.getEmail()) != null && !userService.findByUsername(principal.getName()).getEmail().equals(userToEdit.getEmail())) {
             model.addAttribute("emailExists", true);
+            model.addAttribute("userToEdit", userService.findByUsername(principal.getName()));
+
             return "edit_user";
         }
 

@@ -1,17 +1,11 @@
 package org.thesis.woodindustryecommerce.services.implementations;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import org.thesis.woodindustryecommerce.model.Product;
 import org.thesis.woodindustryecommerce.repository.ProductRepository;
 import org.thesis.woodindustryecommerce.services.ProductService;
@@ -20,11 +14,13 @@ import org.thesis.woodindustryecommerce.services.ProductService;
 @Slf4j
 public class ProductServiceImpl implements ProductService {
 
-    private final AtomicInteger counter = new AtomicInteger();
+    private final CloudinaryService cloudinaryService;
+
     private final ProductRepository productRepository;
 
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository){
+    public ProductServiceImpl(CloudinaryService cloudinaryService, ProductRepository productRepository){
+        this.cloudinaryService = cloudinaryService;
         this.productRepository = productRepository;
     }
 
@@ -40,10 +36,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product save(Product product) {
-        Product savedProduct = productRepository.save(product);
-        saveImage(savedProduct.getImage(), savedProduct.getId());
+        String url = cloudinaryService.uploadFile(product.getImage());
+        if(!url.equals("")){
+            product.setImageUrl(url);
+        }
 
-        return savedProduct;
+        return productRepository.save(product);
     }
 
     @Override
@@ -51,15 +49,4 @@ public class ProductServiceImpl implements ProductService {
         productRepository.deleteById(id);
     }
 
-    private void saveImage(MultipartFile image, Long id){
-        if(image != null && !image.isEmpty()){
-            Path path = Paths.get("product-photos/" + id + ".jpg");
-
-            try{
-                image.transferTo(new File(path.toString()));
-            } catch (IllegalStateException | IOException e){
-                e.printStackTrace();
-            }
-        }
-    }
 }

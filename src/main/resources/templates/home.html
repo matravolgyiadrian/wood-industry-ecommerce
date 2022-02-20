@@ -14,9 +14,9 @@
         <div class="col-12">
             <h3>Products</h3>
             <div class="alert alert-info" th:unless="${products != null and !products.empty}">There is no product</div>
-            <div class="product row g-0">
+            <div id="product" class=" row g-0">
                 <div th:each="product: ${products}" class="card shadow col-3">
-                    <img th:src="'/product-photos/'+${product.id}+'.jpg'"
+                    <img th:src="${product.imageUrl}"
                          class="card-img-top" alt="..." onerror="this.src='https://thumbs.dreamstime.com/b/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132482953.jpg'">
                     <div class="card-body text-center">
                         <h5 class="card-title" th:text="${product.name}"></h5>
@@ -51,5 +51,36 @@
         </div>
     </div>
 </div>
+<div class="toast position-fixed bottom-0 start-0 p-2 fs-5 m-2 text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+    <div class="d-flex">
+        <div class="toast-body">
+            There is no more in stock!
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+</div>
+<script th:inline="javascript">
+/*<![CDATA[*/
+
+    $(function(){
+        $(".search-form").show();
+        $("#keyword").attr("placeholder", "Search products...");
+        initProductCardSearch("product");
+    })
+
+    var queryResult = /*[[${products}]]*/
+
+    var notEnoughInStock = /*[[${notEnoughInStock}]]*/;
+    if(notEnoughInStock){
+        var toastElList = [].slice.call(document.querySelectorAll('.toast'));
+        var toastList = toastElList.map(function(toastEl) {
+            return new bootstrap.Toast(toastEl)
+        })
+        toastList.forEach(toast => toast.show());
+    }
+
+/*]]>*/
+</script>
+<script type="text/javascript" th:src="@{/js/navbar.js}"></script>
 </body>
 </html>

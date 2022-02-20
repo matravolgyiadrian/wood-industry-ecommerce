@@ -30,20 +30,11 @@ public class OrderController {
         return "order";
     }
 
-    @GetMapping("/order/my")
-    @PreAuthorize("isAuthenticated()")
-    public String getMyOrders(Model model, Principal principal) {
-        model.addAttribute("orders", orderService.findByCustomer(principal.getName()));
-        model.addAttribute("myOrder", true);
-
-        return "order";
-    }
-
     @GetMapping("/order/status/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String changeStatus(@PathVariable Long id) {
         orderService.changeStatus(id);
 
-        return "redirect:/order/my";
+        return "redirect:/order/all";
     }
 }

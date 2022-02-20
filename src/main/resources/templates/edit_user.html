@@ -14,19 +14,19 @@
             <div class="card-body">
                 <h4 class="card-title mb-4">Register</h4>
                 <div th:if="${emailExists}" class="alert alert-danger">Email is already used</div>
-                <form autocomplete="off" th:action="@{/user/edit}" method="post" th:object="${userToEdit}">
+                <form autocomplete="off" th:action="@{/user/edit}" method="post">
                     <div class="form-group">
                         <label for="name">Full Name</label>
-                        <input id="name" type="text" class="form-control" name="name" minlength="5" th:field="*{name}">
+                        <input id="name" type="text" class="form-control" name="name" minlength="5" th:field="${userToEdit.fullName}">
                     </div>
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input id="email" type="email" class="form-control" name="email" th:field="*{email}">
+                        <input id="email" type="email" class="form-control" name="email" th:field="${userToEdit.email}">
                     </div>
                     <div class="form-group">
                         <label for="password">Password</label>
                         <div class="input-group" id="show_hide_password">
-                            <input id="password" type="password" class="form-control" minlength="6" name="password" th:field="*{password}">
+                            <input id="password" type="password" class="form-control" minlength="6" name="password" th:field="${userToEdit.password}">
                             <div class="input-group-append">
                                             <span class="input-group-text h-100">
                                             <a href=""><i class="fa fa-eye-slash" aria-hidden="true" style="color: #333;"></i></a>
@@ -36,7 +36,7 @@
                     </div>
                     <div class="form-group">
                         <label for="address">Address</label>
-                        <input id="address" type="text" class="form-control" minlength="5" name="address" th:field="*{address}">
+                        <input id="address" type="text" class="form-control" minlength="5" name="address" th:field="${userToEdit.address}">
                     </div>
                     <div class="form-group mt-5">
                         <button type="submit" class="btn btn-primary btn-block w-100 p-2">

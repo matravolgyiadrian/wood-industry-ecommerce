@@ -42,6 +42,8 @@ public class DBSeeder {
                 .name("Wooden chair")
                 .price(50000D)
                 .stock(200)
+                .stopOrder(false)
+                .reorderThreshold(10)
                 .build();
         this.productRepository.save(chair);
 
@@ -62,8 +64,8 @@ public class DBSeeder {
         User adminUser = User.builder()
                 .username("admin")
                 .password(encoder.encode("admin"))
-                .name("admin")
-                .email("admin@admin.com")
+                .fullName("admin")
+                .email("admin@admin")
                 .address("35045 Alabama, Clanton 2273 Brookside Drive street")
                 .authorities(Set.of(roleRepository.findByAuthority("ROLE_ADMIN")))
                 .build();

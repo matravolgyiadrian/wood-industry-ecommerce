@@ -62,3 +62,34 @@ button, button:focus{
     cursor: inherit !important;
     display: block;
 }
+
+.search-form{
+    display: none;
+    position: relative;
+    width: 30rem;
+    border-radius: .3rem;
+    background-color: #62a794;
+}
+
+#keyword {
+    height: 2.5rem;
+    border: 0;
+    outline: 0;
+    width: 100%;
+    padding: 0 .8rem;
+    border-radius: .3rem;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    transition: all .3s cubic-bezier(0, 0, 0.43, 1.49);
+    transition-property: width, border-radius;
+    z-index: 1;
+    position: relative;
+}
+
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration {
+  -webkit-appearance:none;
+}

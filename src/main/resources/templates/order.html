@@ -19,6 +19,7 @@
                 <thead>
                 <tr>
                     <th>Customer name</th>
+                    <th>Customer email</th>
                     <th>Products</th>
                     <th>Issued on</th>
                     <th>Shipping Address</th>
@@ -27,18 +28,19 @@
                     <th></th>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody id="orderTable">
                 <tr th:each="order: ${orders}">
-                    <td th:text="${order.customer.getUsername()}"></td>
+                    <td th:text="${order.customer}"></td>
+                    <td th:text="${order.email}"></td>
                     <td>
                         <ul class="list-unstyled">
                             <li th:each="item: ${order.getProducts()}"
                                 th:text="${item.getProduct().getName() + ' x ' + item.quantity}"></li>
                         </ul>
                     </td>
-                    <td th:text="${#temporals.format(order.getIssuedOn(), 'yyyy-MM-dd HH:mm')}"></td>
+                    <td th:text="${#temporals.format(order.getIssuedOn(), 'yyyy-MM-dd')}"></td>
                     <td th:text="${order.getShippingAddress}"></td>
-                    <td th:text="${order.getTotalPrice()}"></td>
+                    <td th:text="${#numbers.formatDecimal(order.getTotalPrice(), 1, 'DEFAULT', 2, 'DEFAULT')} + ' Ft'"></td>
                     <td th:text="${order.getStatus()}"></td>
                     <td>
                         <a th:href="${'/order/status/' + order.getId()}" class="btn btn-outline-dark">Change Status</a>
@@ -49,5 +51,19 @@
         </div>
     </div>
 </div>
+<script th:inline="javascript">
+/*<![CDATA[*/
+
+    $(function(){
+       $(".search-form").show();
+        $("#keyword").attr("placeholder", "Search orders...");
+        initOrderSearch("order");
+    })
+
+    var queryResult = /*[[${orders}]]*/
+
+/*]]>*/
+</script>
+<script type="text/javascript" th:src="@{/js/navbar.js}"></script>
 </body>
 </html>

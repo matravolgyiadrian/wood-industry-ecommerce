@@ -8,14 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.multipart.MultipartFile;
 import org.thesis.woodindustryecommerce.model.Product;
 import org.thesis.woodindustryecommerce.services.ProductService;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 @Slf4j
 @Controller
@@ -29,7 +23,7 @@ public class ProductController {
     }
 
     @GetMapping("/product/all")
-    public String getAll(Model model){
+    public String getAll(Model model) {
         model.addAttribute("products", productService.findAll());
         model.addAttribute("productForm", new Product());
 
@@ -37,9 +31,9 @@ public class ProductController {
     }
 
     @GetMapping("/product/new")
-    public String newProduct(Model model){
+    public String newProduct(Model model) {
         model.addAttribute("products", productService.findAll());
-        model.addAttribute("productForm", new Product());
+        model.addAttribute("productForm", Product.builder().reorderThreshold(10).build());
         model.addAttribute("form", true);
         model.addAttribute("method", "new");
 
@@ -47,16 +41,18 @@ public class ProductController {
     }
 
     @PostMapping("/product/new")
-    public String newProduct(@ModelAttribute  Product productForm){
+    public String newProduct(@ModelAttribute Product productForm) {
 
         log.debug("Product with name: {} has been successfully created", productForm.getName());
+        productForm.setReorderThreshold(10);
+        productForm.setStopOrder(false);
         Product savedProduct = productService.save(productForm);
 
         return "redirect:/product/all";
     }
 
     @GetMapping("/product/edit/{id}")
-    public String editProduct(@PathVariable Long id, Model model){
+    public String editProduct(@PathVariable Long id, Model model) {
         Product product = productService.findById(id);
 
         model.addAttribute("products", productService.findAll());
@@ -70,15 +66,30 @@ public class ProductController {
     }
 
     @PostMapping("/product/edit/{id}")
-    public String editProduct(@PathVariable Long id, @ModelAttribute Product productForm){
-        log.info("imageUrl: {}", productForm.getImage());
-        Product newProduct = new Product(id, productForm.getName(), productForm.getPrice(), productForm.getStock(), productForm.getImage());
-        productService.save(newProduct);
+    public String editProduct(@PathVariable Long id, @ModelAttribute Product productForm) {
+        log.debug("imageUrl: {}", productForm.getImage());
+        Product product = productService.findById(id);
+        product.setName(productForm.getName());
+        product.setPrice(productForm.getPrice());
+        product.setStock(productForm.getStock());
+        product.setReorderThreshold(productForm.getReorderThreshold());
+        productService.save(product);
+        return "redirect:/product/all";
+    }
+
+    @PostMapping("/product/stop-order/{id}")
+    public String stopOrderProduct(@PathVariable Long id) {
+        Product product = productService.findById(id);
+        product.setStopOrder(true);
+
+        productService.save(product);
+        log.debug("Product with id: {} is reported to stop order", id);
+
         return "redirect:/product/all";
     }
 
     @PostMapping("/product/delete/{id}")
-    public String deleteProduct(@PathVariable Long id){
+    public String deleteProduct(@PathVariable Long id) {
         productService.delete(id);
 
         log.debug("Product with id: {} has been successfully deleted", id);

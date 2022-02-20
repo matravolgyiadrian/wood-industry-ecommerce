@@ -6,16 +6,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Data
-@Entity
-@Table(name = "cart_items")
+@Embeddable
 @NoArgsConstructor
-public class CartItem {
-    @Id
-    @Setter(AccessLevel.NONE)
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+public class CartItem implements Serializable {
     @OneToOne
     private Product product;
     private int quantity;

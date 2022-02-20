@@ -1,8 +1,10 @@
 package org.thesis.woodindustryecommerce.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Role;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -11,10 +13,13 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.thesis.woodindustryecommerce.services.implementations.UserDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity
+@EnableTransactionManagement
+@Role(BeanDefinition.ROLE_INFRASTRUCTURE)
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -31,9 +36,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/css/**", "/js/**", "/cart/**", "/order/**", "/home", "/about").permitAll()
+                .antMatchers("/coupon/validation","/app/**","/cart-websocket/**","/webjars/**", "/css/**", "/js/**", "/cart/**", "/order/**", "/home", "/about").permitAll()
                 .antMatchers("/", "/login", "/register").anonymous()
-                .antMatchers("/product/**").hasAuthority("ROLE_ADMIN")
+                .antMatchers("/product/**", "/coupon/**").hasAuthority("ROLE_ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

@@ -20,15 +20,17 @@
                 <tr>
                     <th>Coupon Code</th>
                     <th>Amount Discount</th>
+                    <th>Expiration Date</th>
                     <th></th>
                     <th></th>
 
                 </tr>
                 </thead>
-                <tbody>
+                <tbody id="couponTable">
                 <tr th:each="coupon: ${coupons}">
                     <td th:text="${coupon.couponCode}"></td>
                     <td th:text="${coupon.discountAmount}"></td>
+                    <td th:text="${coupon.expirationDate ne null}? ${coupon.expirationDate} : 'None'"></td>
                     <td><a th:href="${'/coupon/edit/'+ coupon.getId()}" class="btn btn-outline-dark">Edit item</a></td>
                     <td>
                         <form th:action="${'/coupon/delete/' + coupon.getId()}" method="post">
@@ -49,6 +51,10 @@
                     <label for="discountAmount">Discount Amount</label>
                     <input type="number" step="1" min=0 max="100" class="form-control" id="discountAmount" th:field="*{discountAmount}" />
                 </div>
+                <div class="form-group">
+                    <label for="expirationDate">Expiration date</label>
+                    <input type="date" class="form-control" id="expirationDate" th:field="*{expirationDate}" />
+                </div>
                 <input th:if="${isNew}" type="submit" class="btn btn-outline-dark" th:action="@{/coupon/new}" th:value="Confirm">
                 <input th:if="${isEdit}" type="submit" class="btn btn-outline-dark" th:action="@{/coupon/edit/{id}}" th:value="Edit">
 
@@ -56,5 +62,37 @@
         </div>
     </div>
 </div>
+<div class="toast position-fixed bottom-0 start-0 p-2 fs-5 m-2 text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+    <div class="d-flex">
+        <div class="toast-body">
+            Given code already exists!
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+</div>
+<script th:inline="javascript">
+/*<![CDATA[*/
+
+    $(function(){
+       $(".search-form").show();
+        $("#keyword").attr("placeholder", "Search coupons...");
+        initCouponSearch("coupon");
+    })
+
+    var queryResult = /*[[${coupons}]]*/
+
+
+    var notEnoughInStock = /*[[${codeAlreadyExists}]]*/;
+    if(notEnoughInStock){
+        var toastElList = [].slice.call(document.querySelectorAll('.toast'));
+        var toastList = toastElList.map(function(toastEl) {
+            return new bootstrap.Toast(toastEl)
+        })
+        toastList.forEach(toast => toast.show());
+    }
+
+/*]]>*/
+</script>
+<script type="text/javascript" th:src="@{/js/navbar.js}"></script>
 </body>
 </html>

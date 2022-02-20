@@ -2,11 +2,10 @@ package org.thesis.woodindustryecommerce.services.implementations;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.thesis.woodindustryecommerce.model.Order;
 import org.thesis.woodindustryecommerce.model.Status;
-import org.thesis.woodindustryecommerce.model.User;
 import org.thesis.woodindustryecommerce.repository.OrderRepository;
-import org.thesis.woodindustryecommerce.repository.UserRepository;
 import org.thesis.woodindustryecommerce.services.OrderService;
 
 import java.time.LocalDateTime;
@@ -17,12 +16,12 @@ import java.util.NoSuchElementException;
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
-    private final UserRepository userRepository;
+    private final EmailSenderService emailSenderService;
 
     @Autowired
-    public OrderServiceImpl(OrderRepository orderRepository, UserRepository userRepository) {
+    public OrderServiceImpl(OrderRepository orderRepository, EmailSenderService emailSenderService) {
         this.orderRepository = orderRepository;
-        this.userRepository = userRepository;
+        this.emailSenderService = emailSenderService;
     }
 
     @Override
@@ -32,8 +31,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Order> findByCustomer(String username) {
-        User user = userRepository.findByUsername(username);
-        return orderRepository.findByCustomerOrderByIssuedOn(user);
+        return orderRepository.findByCustomerOrderByIssuedOn(username);
     }
 
     @Override
@@ -43,8 +41,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Order> findByCustomerAndStatus(String username, Status status) {
-        User user = userRepository.findByUsername(username);
-        return orderRepository.findByCustomerAndStatusOrderByIssuedOn(user, status);
+        return orderRepository.findByCustomerAndStatusOrderByIssuedOn(username, status);
     }
 
     @Override
@@ -53,12 +50,14 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public void changeStatus(Long id) {
         Order order = orderRepository.findById(id).orElseThrow(NoSuchElementException::new);
         if (order.getStatus().ordinal() != 2) {
             order.setStatus(Status.values()[order.getStatus().ordinal() + 1]);
 
             orderRepository.save(order);
+            emailSenderService.sendOrderStatusChangedEmail(order);
         }
     }
 

@@ -23,25 +23,26 @@
           </div>
           <span th:text="${#numbers.formatDecimal(item.totalPrice, 1, 'DEFAULT', 2, 'DEFAULT')} + ' Ft'" class="text-muted">$12</span>
         </li>
-
-        <li th:if="${discountPercentage != 0}" class="list-group-item d-flex justify-content-between bg-light">
+        <li id="coupon" class="list-group-item d-none justify-content-between"></li>
+        <!--<li th:if="${discountPercentage != 0}" class="list-group-item d-flex justify-content-between bg-light">
           <div class="text-success">
             <h6 class="my-0">Coupon code</h6>
             <small th:text="${coupon_code?:''}">EXAMPLECODE</small>
           </div>
           <span th:text="'- ' + ${#numbers.formatDecimal(total_price * discountPercentage/100, 1, 'DEFAULT', 2, 'DEFAULT')} + ' Ft'" class="text-success">-$5</span>
-        </li>
+        </li>-->
         <li class="list-group-item d-flex justify-content-between">
           <span>Grand Total</span>
-          <strong th:text="${#numbers.formatDecimal(total_price * discountMultiplier, 1, 'DEFAULT', 2, 'DEFAULT')} + ' Ft'">$20</strong>
+          <strong id="grandTotal" th:text="${#numbers.formatDecimal(total_price, 1, 'DEFAULT', 2, 'DEFAULT')} + ' Ft'">$20</strong>
         </li>
       </ul>
+      <p id="totalPrice" hidden th:text="${total_price}"></p>
 
-      <form class="card p-2" th:action="@{/cart/validate-coupon}" method="post">
+      <form id="couponForm" class="card p-2">
         <div class="input-group">
-          <input type="text" class="form-control" placeholder="COUPON CODE" autocomplete="off" name="couponCode">
+          <input type="text" id="couponInput" class="form-control" placeholder="COUPON CODE" autocomplete="off" name="couponCode">
           <div class="input-group-append">
-            <button type="submit" class="btn btn-secondary">Redeem</button>
+            <button type="submit" id="validateCoupon" class="btn btn-secondary">Redeem</button>
           </div>
         </div>
       </form>
@@ -49,24 +50,8 @@
     <div class="col-md-8 order-md-1">
       <h4 class="mb-3">Billing address</h4>
       <form method="post" th:action="@{/cart/checkout}">
-        <input type="hidden" name="discountMultiplier" th:value="${discountMultiplier}">
-        <div sec:authorize="isAuthenticated()" class="row">
-          <div class="mb-3">
-            <label for="loggedinName">Full name</label>
-            <input type="text" class="form-control" id="loggedinName" placeholder="Jon Doe" name="name" th:field="${user.name}" required>
-          </div>
-
-          <div class="mb-3">
-            <label for="loggedinEmail">Email</label>
-            <input type="email" class="form-control" id="loggedinEmail" placeholder="you@example.com" th:field="${user.email}" required>
-          </div>
-
-          <div class="mb-3">
-            <label for="loggedinAddress">Address</label>
-            <input type="text" class="form-control" id="loggedinAddress" placeholder="1234 Main St" th:field="${user.address}" required>
-          </div>
-        </div>
-        <div sec:authorize="isAnonymous()" class="row">
+        <input id="hiddenDiscountMultiplier" type="hidden" name="discountMultiplier">
+        <div class="row">
           <div class="mb-3">
             <label for="name">Full name</label>
             <input type="text" class="form-control" id="name" name="name" th:field="${billingForm.fullName}" required>
@@ -128,5 +113,8 @@
   </div>
 </div>
 </div>
+<script type="text/javascript" th:src="@{/js/coupon.js}"></script>
+<script th:src="@{/webjars/sockjs-client/1.5.1/sockjs.js}" type="text/javascript"></script>
+<script th:src="@{/webjars/stomp-websocket/2.3.4/stomp.js}" type="text/javascript"></script>
 </body>
 </html>
