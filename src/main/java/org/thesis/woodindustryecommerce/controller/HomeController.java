@@ -37,10 +37,7 @@ public class HomeController {
     }
 
     @GetMapping({"/", "/home", "/index"})
-    public String home(Model model, String keyword){
-        if(keyword != null){
-            model.addAttribute("products", productService.findByKeyword(keyword));
-        }
+    public String home(){
         return "home";
     }
 

@@ -14,7 +14,7 @@
         <div class="col-12">
             <h3>Products</h3>
             <div class="alert alert-info" th:unless="${products != null and !products.empty}">There is no product</div>
-            <div class="product row g-0">
+            <div id="product" class=" row g-0">
                 <div th:each="product: ${products}" class="card shadow col-3">
                     <img th:src="${product.imageUrl}"
                          class="card-img-top" alt="..." onerror="this.src='https://thumbs.dreamstime.com/b/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132482953.jpg'">
@@ -62,6 +62,14 @@
 <script th:inline="javascript">
 /*<![CDATA[*/
 
+    $(function(){
+        $(".search-form").show();
+        $("#keyword").attr("placeholder", "Search products...");
+        initProductCardSearch("product");
+    })
+
+    var queryResult = /*[[${products}]]*/
+
     var notEnoughInStock = /*[[${notEnoughInStock}]]*/;
     if(notEnoughInStock){
         var toastElList = [].slice.call(document.querySelectorAll('.toast'));
@@ -73,5 +81,6 @@
 
 /*]]>*/
 </script>
+<script type="text/javascript" th:src="@{/js/navbar.js}"></script>
 </body>
 </html>

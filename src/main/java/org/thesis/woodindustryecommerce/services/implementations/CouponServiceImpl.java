@@ -37,11 +37,6 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    public List<Coupon> findByKeyword(String keyword) {
-        return couponRepository.findByKeyword(keyword);
-    }
-
-    @Override
     public Coupon save(Coupon coupon) {
         emailSenderService.sendPromotionNotification(coupon);
         return couponRepository.save(coupon);

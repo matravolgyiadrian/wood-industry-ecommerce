@@ -10,7 +10,6 @@ public interface CouponService {
     List<Coupon> findAll();
     Coupon findById(Long id);
     Coupon findByCouponCode(String code);
-    List<Coupon> findByKeyword(String keyword);
     Coupon save(Coupon coupon);
     void delete(Long id);
 }

@@ -26,7 +26,7 @@
 
                 </tr>
                 </thead>
-                <tbody>
+                <tbody id="couponTable">
                 <tr th:each="coupon: ${coupons}">
                     <td th:text="${coupon.couponCode}"></td>
                     <td th:text="${coupon.discountAmount}"></td>
@@ -73,6 +73,15 @@
 <script th:inline="javascript">
 /*<![CDATA[*/
 
+    $(function(){
+       $(".search-form").show();
+        $("#keyword").attr("placeholder", "Search coupons...");
+        initCouponSearch("coupon");
+    })
+
+    var queryResult = /*[[${coupons}]]*/
+
+
     var notEnoughInStock = /*[[${codeAlreadyExists}]]*/;
     if(notEnoughInStock){
         var toastElList = [].slice.call(document.querySelectorAll('.toast'));
@@ -84,5 +93,6 @@
 
 /*]]>*/
 </script>
+<script type="text/javascript" th:src="@{/js/navbar.js}"></script>
 </body>
 </html>

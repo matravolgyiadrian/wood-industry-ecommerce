@@ -141,12 +141,13 @@ public class CartController {
 
     private boolean addItem(List<CartItem> cart, CartItem item) {
         for (CartItem cartItem : cart) {
-            if (cartItem.getProduct().getId().equals(item.getProduct().getId()) &&
-                    cartItem.getQuantity() + item.getQuantity() <= cartItem.getProduct().getStock()) {
-                cartItem.setQuantity(cartItem.getQuantity() + item.getQuantity());
-                return true;
-            } else{
-                return false;
+            if (cartItem.getProduct().getId().equals(item.getProduct().getId())){
+                if(cartItem.getQuantity() + item.getQuantity() <= item.getProduct().getStock()){
+                    cartItem.setQuantity(cartItem.getQuantity() + item.getQuantity());
+                    return true;
+                } else {
+                    return false;
+                }
             }
         }
         if (item.getQuantity() > item.getProduct().getStock()) {

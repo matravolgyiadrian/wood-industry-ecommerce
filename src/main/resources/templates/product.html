@@ -60,10 +60,10 @@
                     <th></th>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody id="productTable">
                 <tr th:each="product: ${products}">
                     <td th:text="${product.name}">5</td>
-                    <td th:text="${product.price}">112</td>
+                    <td th:text="${#numbers.formatDecimal(product.price, 1, 'DEFAULT', 2, 'DEFAULT')} + ' Ft'">112</td>
                     <td th:text="${product.stock}">30</td>
                     <td>
                         <a th:href="${'/product/edit/' + product.getId()}" class="btn btn-primary" th:text="Edit"></a>
@@ -87,5 +87,19 @@
         </div>
     </div>
 </div>
+<script th:inline="javascript">
+/*<![CDATA[*/
+
+    $(function(){
+        $(".search-form").show();
+        $("#keyword").attr("placeholder", "Search products...");
+        initProductTableSearch();
+    })
+
+    var queryResult = /*[[${products}]]*/
+
+/*]]>*/
+</script>
+<script type="text/javascript" th:src="@{/js/navbar.js}"></script>
 </body>
 </html>

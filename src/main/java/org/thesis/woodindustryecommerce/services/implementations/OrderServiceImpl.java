@@ -45,11 +45,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> findByKeyword(String keyword) {
-        return orderRepository.findByKeyword(keyword);
-    }
-
-    @Override
     public Order findById(Long id) {
         return orderRepository.findById(id).orElseThrow(NoSuchElementException::new);
     }

@@ -23,19 +23,15 @@ public class ProductController {
     }
 
     @GetMapping("/product/all")
-    public String getAll(Model model, String keyword){
-        if(keyword != null){
-            model.addAttribute("products", productService.findByKeyword(keyword));
-        } else {
-            model.addAttribute("products", productService.findAll());
-        }
+    public String getAll(Model model) {
+        model.addAttribute("products", productService.findAll());
         model.addAttribute("productForm", new Product());
 
         return "product";
     }
 
     @GetMapping("/product/new")
-    public String newProduct(Model model){
+    public String newProduct(Model model) {
         model.addAttribute("products", productService.findAll());
         model.addAttribute("productForm", Product.builder().reorderThreshold(10).build());
         model.addAttribute("form", true);
@@ -45,7 +41,7 @@ public class ProductController {
     }
 
     @PostMapping("/product/new")
-    public String newProduct(@ModelAttribute  Product productForm){
+    public String newProduct(@ModelAttribute Product productForm) {
 
         log.debug("Product with name: {} has been successfully created", productForm.getName());
         productForm.setReorderThreshold(10);
@@ -56,7 +52,7 @@ public class ProductController {
     }
 
     @GetMapping("/product/edit/{id}")
-    public String editProduct(@PathVariable Long id, Model model){
+    public String editProduct(@PathVariable Long id, Model model) {
         Product product = productService.findById(id);
 
         model.addAttribute("products", productService.findAll());
@@ -70,7 +66,7 @@ public class ProductController {
     }
 
     @PostMapping("/product/edit/{id}")
-    public String editProduct(@PathVariable Long id, @ModelAttribute Product productForm){
+    public String editProduct(@PathVariable Long id, @ModelAttribute Product productForm) {
         log.debug("imageUrl: {}", productForm.getImage());
         Product product = productService.findById(id);
         product.setName(productForm.getName());
@@ -82,7 +78,7 @@ public class ProductController {
     }
 
     @PostMapping("/product/stop-order/{id}")
-    public String stopOrderProduct(@PathVariable Long id){
+    public String stopOrderProduct(@PathVariable Long id) {
         Product product = productService.findById(id);
         product.setStopOrder(true);
 
@@ -91,8 +87,9 @@ public class ProductController {
 
         return "redirect:/product/all";
     }
+
     @PostMapping("/product/delete/{id}")
-    public String deleteProduct(@PathVariable Long id){
+    public String deleteProduct(@PathVariable Long id) {
         productService.delete(id);
 
         log.debug("Product with id: {} has been successfully deleted", id);

@@ -21,12 +21,8 @@ public class CouponController {
     }
 
     @GetMapping("/coupon/all")
-    public String getCoupons(Model model, String keyword) {
-        if(keyword != null){
-            model.addAttribute("coupons", couponService.findByKeyword(keyword));
-        } else {
-            model.addAttribute("coupons", couponService.findAll());
-        }
+    public String getCoupons(Model model) {
+        model.addAttribute("coupons", couponService.findAll());
 
         return "coupon";
     }
@@ -78,7 +74,7 @@ public class CouponController {
                 .collect(Collectors.toSet());
         codes.remove(couponService.findById(id).getCouponCode().toUpperCase());
 
-        if(codes.contains(couponForm.getCouponCode().toUpperCase())){
+        if (codes.contains(couponForm.getCouponCode().toUpperCase())) {
             model.addAttribute("codeAlreadyExists", true);
             model.addAttribute("coupons", couponService.findAll());
             model.addAttribute("form", true);

@@ -24,12 +24,8 @@ public class OrderController {
 
     @GetMapping("/order/all")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public String getAllOrder(Model model, String keyword) {
-        if(keyword != null){
-            model.addAttribute("orders", orderService.findByKeyword(keyword));
-        } else {
-            model.addAttribute("orders", orderService.findAll());
-        }
+    public String getAllOrder(Model model) {
+        model.addAttribute("orders", orderService.findAll());
 
         return "order";
     }
