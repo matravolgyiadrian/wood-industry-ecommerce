@@ -63,20 +63,15 @@ public class UserController {
     }
 
     @GetMapping("/user-details")
-    public String userDetails(Model model, Principal principal, String keyword){
+    public String userDetails(Model model, Principal principal, String keyword) {
         model.addAttribute("user", userService.findByUsername(principal.getName()));
-
-        if(keyword != null){
-            model.addAttribute("orders", orderService.findByKeyword(keyword));
-        } else {
-            model.addAttribute("orders", orderService.findByCustomer(principal.getName()));
-        }
+        model.addAttribute("orders", orderService.findByCustomer(principal.getName()));
 
         return "myprofile";
     }
 
     @GetMapping("/user/edit")
-    public String editUser(Model model, Principal principal){
+    public String editUser(Model model, Principal principal) {
         model.addAttribute("userToEdit", userService.findByUsername(principal.getName()));
 
         log.info("user to edit before edit: {}", userService.findByUsername(principal.getName()).toString());

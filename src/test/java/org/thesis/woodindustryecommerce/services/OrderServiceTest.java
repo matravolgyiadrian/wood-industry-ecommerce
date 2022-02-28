@@ -57,17 +57,6 @@ class OrderServiceTest {
     }
 
     @Test
-    void testFindByStatusShouldCallOrderRepository(){
-        //Given
-
-        //When
-        underTest.findByStatus(Status.DELIVERED);
-
-        //Then
-        Mockito.verify(orderRepository, Mockito.times(1)).findByStatusOrderByIssuedOn(Status.DELIVERED);
-    }
-
-    @Test
     void testFindByIdShouldCallOrderRepository(){
         //Given
         Mockito.when(orderRepository.findById(0L)).thenReturn(Optional.of(new Order()));

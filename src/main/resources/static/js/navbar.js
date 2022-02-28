@@ -1,32 +1,34 @@
+var filteredQuery = [];
+
 function initProductTableSearch(){
     $("#keyword").on("keyup", function(){
             var value = $(this).val();
-            var data = filterProducts(value, queryResult);
-            rebuildProductTable(data);
+            filteredQuery = filterProducts(value, queryResult);
+            rebuildProductTable(filteredQuery);
         });
 }
 
 function initProductCardSearch(){
     $("#keyword").on("keyup", function(){
             var value = $(this).val();
-            var data = filterProducts(value, queryResult);
-            rebuildProductCards(data);
+            filteredQuery = filterProducts(value, queryResult);
+            rebuildProductCards(filteredQuery);
         });
 }
 
 function initOrderSearch(){
     $("#keyword").on("keyup", function(){
             var value = $(this).val();
-            var data = filterOrders(value, queryResult);
-            rebuildOrderTable(data);
+            filteredQuery = filterOrders(value, queryResult);
+            rebuildOrderTable(filteredQuery);
         });
 }
 
 function initCouponSearch(){
     $("#keyword").on("keyup", function(){
             var value = $(this).val();
-            var data = filterCoupons(value, queryResult);
-            rebuildCouponTable(data);
+            filteredQuery = filterCoupons(value, queryResult);
+            rebuildCouponTable(filteredQuery);
         });
 }
 
@@ -133,7 +135,6 @@ function rebuildProductTable(products){
                             <td>
                                 <form class="m-auto" style="width: min-content;"
                                 action="${'/product/stop-order/' + products[i].id}" method="post">`;
-        console.log(products[i].stopOrder);
         if(products[i].stopOrder){
             row += `<input class="btn btn-danger" type="submit" value="Stop Order" disabled="disabled"}>`;
         } else {

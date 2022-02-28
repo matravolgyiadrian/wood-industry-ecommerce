@@ -17,14 +17,14 @@
             </div>
             <table class="table" th:if="${!orders.isEmpty() and orders != null}">
                 <thead>
-                <tr>
-                    <th>Customer name</th>
-                    <th>Customer email</th>
+                <tr class="disable-select">
+                    <th id="table-name">Customer name</th>
+                    <th id="table-email">Customer email</th>
                     <th>Products</th>
-                    <th>Issued on</th>
-                    <th>Shipping Address</th>
-                    <th>Total Price</th>
-                    <th>Status</th>
+                    <th id="table-issuedOn">Issued on</th>
+                    <th id="table-address">Shipping Address</th>
+                    <th id="table-price">Total Price</th>
+                    <th id="table-status">Status</th>
                     <th></th>
                 </tr>
                 </thead>
@@ -65,5 +65,6 @@
 /*]]>*/
 </script>
 <script type="text/javascript" th:src="@{/js/navbar.js}"></script>
+<script type="text/javascript" th:src="@{/js/order-sorting.js}"></script>
 </body>
 </html>

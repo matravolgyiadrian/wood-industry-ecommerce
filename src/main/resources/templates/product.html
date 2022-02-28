@@ -51,10 +51,10 @@
         <div th:if="${!products.isEmpty() and products != null}">
             <table class="table table-light">
                 <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Price</th>
-                    <th>Stock</th>
+                <tr class="disable-select">
+                    <th id="table-name">Name</th>
+                    <th id="table-price">Price</i></th>
+                    <th id="table-stock">Stock</th>
                     <th></th>
                     <th></th>
                     <th></th>
@@ -101,5 +101,6 @@
 /*]]>*/
 </script>
 <script type="text/javascript" th:src="@{/js/navbar.js}"></script>
+<script type="text/javascript" th:src="@{/js/product-sorting.js}"></script>
 </body>
 </html>

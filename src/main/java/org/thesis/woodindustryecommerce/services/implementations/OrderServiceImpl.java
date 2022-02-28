@@ -35,16 +35,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> findByStatus(Status status) {
-        return orderRepository.findByStatusOrderByIssuedOn(status);
-    }
-
-    @Override
-    public List<Order> findByCustomerAndStatus(String username, Status status) {
-        return orderRepository.findByCustomerAndStatusOrderByIssuedOn(username, status);
-    }
-
-    @Override
     public Order findById(Long id) {
         return orderRepository.findById(id).orElseThrow(NoSuchElementException::new);
     }
