@@ -16,6 +16,4 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findAll();
     @EntityGraph(value = "Order.detail")
     List<Order> findByCustomerOrderByIssuedOn(String customer);
-    List<Order> findByStatusOrderByIssuedOn(Status status);
-    List<Order> findByCustomerAndStatusOrderByIssuedOn(String customer, Status status);
 }
