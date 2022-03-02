@@ -16,8 +16,8 @@ import org.thesis.woodindustryecommerce.repository.UserRepository;
 import javax.annotation.PostConstruct;
 import java.util.Set;
 
-@Component
-@Profile("!test")
+//@Component
+//@Profile("!test")
 public class DBSeeder {
 
     private final ProductRepository productRepository;
