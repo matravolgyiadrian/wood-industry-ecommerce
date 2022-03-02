@@ -69,6 +69,9 @@ public class ProductController {
     public String editProduct(@PathVariable Long id, @ModelAttribute Product productForm) {
         log.debug("imageUrl: {}", productForm.getImage());
         Product product = productService.findById(id);
+        if(!productForm.getImage().isEmpty()){
+            product.setImage(productForm.getImage());
+        }
         product.setName(productForm.getName());
         product.setPrice(productForm.getPrice());
         product.setStock(productForm.getStock());

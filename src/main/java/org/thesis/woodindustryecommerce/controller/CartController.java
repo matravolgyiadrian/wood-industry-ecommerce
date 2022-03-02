@@ -106,7 +106,7 @@ public class CartController {
     }
 
     @PostMapping("/cart/checkout")
-    public String checkout(@SessionAttribute("shopping_cart") List<CartItem> cart,
+    public ModelAndView checkout(@SessionAttribute("shopping_cart") List<CartItem> cart, RedirectAttributes redirectAttr,
                            Principal principal, double discountMultiplier, Billing billingForm) {
         double totalPrice = calculateTotalPrice(cart);
 
@@ -136,7 +136,8 @@ public class CartController {
         emailSenderService.sendTemplateEmail(order);
         cart.clear();
 
-        return "redirect:/home";
+        redirectAttr.addFlashAttribute("successfulOrder", true);
+        return new ModelAndView("redirect:/home");
     }
 
     private boolean addItem(List<CartItem> cart, CartItem item) {
