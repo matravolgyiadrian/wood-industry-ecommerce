@@ -93,10 +93,6 @@ Assumptions:
 * The manager cannot be a customers
 <!-- * Any user cannot edit their account information -->
 
-### 2.6 Approportioning of Requirements
-
-* Verifying the email address provided by a user.
-* Support for visually impaired  users
 
 ## 3. Specific Requirements
 
@@ -197,7 +193,6 @@ Assumptions:
         	1. Applies to entire order
         	1. Expiration occurs at manager specified date
         	1. Only one promotion can be applied to an order
-        	1. Non-member users cannot apply promotions to order
     	1. Creation
         	1. Promotion created by manager
         	1. Each promotion has a unique ID
