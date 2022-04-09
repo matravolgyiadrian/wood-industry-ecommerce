@@ -293,7 +293,7 @@ class CartControllerTest {
                                 new BasicNameValuePair("cc-cvv", "123")
 
                         )))))
-                .andExpect(redirectedUrl("/home?total_price=200.0"))
+                .andExpect(redirectedUrl("/home"))
                 .andExpect(view().name("redirect:/home"))
                 .andExpect(request().sessionAttribute("shopping_cart", new LinkedList<>()));
 
@@ -333,7 +333,7 @@ class CartControllerTest {
                                 new BasicNameValuePair("cc-cvv", "123")
 
                         )))))
-                .andExpect(redirectedUrl("/home?total_price=200.0"))
+                .andExpect(redirectedUrl("/home"))
                 .andExpect(view().name("redirect:/home"))
                 .andExpect(request().sessionAttribute("shopping_cart", new LinkedList<>()));
 

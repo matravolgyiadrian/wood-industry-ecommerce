@@ -17,7 +17,7 @@ my thesis.
 
 The software system being produced is called Wood Industry E-Commerce System. This system focuses on the company and applications, which allow for online sale and marketing of products.
 
-The Wood Industry E-Commerce System will allow any user to create an account to become a member. The customer through the process of account creation, will have the option to become a member of the site. The system will allow costumers to browse , search , select and add products to a shopping cart. Then, provided the shopping cart doesn't empty, check out products. The system also allows a manager to manage the inventory with full create, update, retrieve and delete (CRUD) functionality. The system allows the manager to interact with the promotion system that handles percentage-off promotions that can be applied to member's orders. The system has full email capabilities; the automated email functionality will be used to send information about the check out and the promotions to the customer.
+The Wood Industry E-Commerce System will allow any user to create an account to become a member. The customer through the process of account creation, will have the option to become a member of the site. The system will allow costumers to browse , search , select and add products to a shopping cart. Then, provided the shopping cart doesn't empty, check out products. The system also allows a manager to manage the inventory with full create, update, retrieve and delete (CRUD) functionality. The system allows the manager to interact with the promotion system that handles percentage-off promotions that can be applied to user's orders. The system has full email capabilities; the automated email functionality will be used to send information about the check out and the promotions to the customer.
 
 ### 1.3 Definitions, Acronyms and Abbrevations
 
@@ -54,7 +54,7 @@ The system will provide a number of functions.
 
 * Maintain data associated with the inventory (collection of items)
   * An item has an id, name, description and price
-  * The inventory also keep track of the the stock of each item
+  * The inventory also keep track of the stock and reorder threshold of each item
 * Allow any costumer to become a member
 * Show the listing of the available products
 * Allow customers and managers to log in and out of the system
@@ -65,7 +65,6 @@ The system will provide a number of functions.
   * Anyone is able to add one or more product to it
 * Checkout
   * Checkout is available for anyone, not just for members
-  * Member customers may enter promotion code
   * Only one promotion code may be used per purchase
     * The promotion is a fixed percentage discount that is to be applied to the entire order.
     * The discount is specified by the manager.
@@ -119,7 +118,6 @@ Assumptions:
     	1. Password
     	1. Email Address
     	1. Postal Address
-    	1. Member/Not member Boolean
  	1. Manager has these attributes
     	1. Username
     	1. Password
@@ -142,7 +140,17 @@ Assumptions:
     	1. Interaction
         	1. Button to add particular item to shopping cart
   	1. Search Inventory
-    	1. Search available only by the name of item
+	  	* For customers
+    		1. Search available only by the name of item
+		* For manager
+			1. Search available on the home page
+				* Search the name of the product
+			1. Search available on the product page
+				* Search the name of the product
+			1. Search available on the order page
+				* Search the customer's name, email or postal address
+			1. Search available on the coupon page
+				* Search the code of the coupon
   	1. Create, Update and Delete functions (CRUD)
     	1. Only the manager is allowed to modify the inventory
     	1. Manager have an interface to:
@@ -152,6 +160,7 @@ Assumptions:
         	1. Delete items from inventory
         	1. Create a new promotion
         	1. Review current inventory
+		1. In the mentioned interface the manager can sort to corresponding columns of the table
   	1. Shopping Cart
     	1. Logged in
         	1. Can add items to the cart
