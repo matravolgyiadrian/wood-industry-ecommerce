@@ -35,6 +35,11 @@
     $ mvn clean install
     $ mvn spring-boot:run
     ```
+
+The admin account credentials are: 
+
+    username: admin
+    password: admin 
 ## Run tests
 
 ```sh
