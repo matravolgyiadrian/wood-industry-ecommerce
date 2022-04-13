@@ -12,7 +12,7 @@
     <div class="row align-items-center justify-content-md-center h-100">
         <div class="card shadow p-2" style="width: 400px;">
             <div class="card-body">
-                <h4 class="card-title mb-4">Register</h4>
+                <h4 class="card-title mb-4">Edit user</h4>
                 <div th:if="${emailExists}" class="alert alert-danger">Email is already used</div>
                 <form autocomplete="off" th:action="@{/user/edit}" method="post">
                     <div class="form-group">
