@@ -15,15 +15,12 @@ import java.util.Map;
 @Service
 public class CloudinaryService {
 
-    public String uploadFile(MultipartFile file){
-        try{
-            if(file != null){
-                File uploadedFile = convertMultipartToFile(file);
-                Map uploadResult = Singleton.getCloudinary().uploader().upload(uploadedFile, ObjectUtils.emptyMap());
-                return uploadResult.get("url").toString();
-            }
-            return "";
-        } catch (Exception e){
+    public String uploadFile(MultipartFile file) {
+        try {
+            File uploadedFile = convertMultipartToFile(file);
+            Map uploadResult = Singleton.getCloudinary().uploader().upload(uploadedFile, ObjectUtils.emptyMap());
+            return uploadResult.get("url").toString();
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
