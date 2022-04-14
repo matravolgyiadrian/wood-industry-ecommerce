@@ -29,19 +29,16 @@ public class EmailSenderService {
 
     private final SpringTemplateEngine templateEngine;
 
-    private String adminEmail;
-
     @Autowired
     public EmailSenderService(JavaMailSender mailSender, UserRepository userRepository, SpringTemplateEngine templateEngine) {
         this.mailSender = mailSender;
         this.userRepository = userRepository;
         this.templateEngine = templateEngine;
-
-        this.adminEmail = userRepository.findByUsername("admin").getEmail();
     }
 
     public void sendSimpleEmail(String email, String name, String text){
         try{
+            String adminEmail = userRepository.findByUsername("admin").getEmail();
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message,
                     MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
@@ -60,6 +57,7 @@ public class EmailSenderService {
 
     public void sendProductReorderEmail(String productName, int reorderedAmount){
         try{
+            String adminEmail = userRepository.findByUsername("admin").getEmail();
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message,
                     MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
