@@ -23,23 +23,22 @@ import java.util.Objects;
 @Service
 @Slf4j
 public class EmailSenderService {
-    private JavaMailSender mailSender;
+    private final JavaMailSender mailSender;
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    private SpringTemplateEngine templateEngine;
+    private final SpringTemplateEngine templateEngine;
+
+    private String adminEmail;
 
     @Autowired
     public EmailSenderService(JavaMailSender mailSender, UserRepository userRepository, SpringTemplateEngine templateEngine){
         this.mailSender = mailSender;
         this.userRepository = userRepository;
         this.templateEngine = templateEngine;
-        
-        this.adminEmail = userRepository.findByUsername("admin").getEmail();
-        log.info(adminEmail);
-    }
 
-    private String adminEmail;
+        this.adminEmail = userRepository.findByUsername("admin").getEmail();
+    }
 
     public void sendSimpleEmail(String email, String name, String text){
         try{
