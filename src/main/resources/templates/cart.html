@@ -58,7 +58,7 @@
     </div>
 
     <div class="row justify-content-md-end justify-content-center">
-        <a href="/cart/checkout" class="btn btn-success mt-4 fs-5" style="width: min-content;">Checkout</a>
+        <a href="/cart/checkout" class="btn btn-success mt-4 fs-5" id="checkout-btn" style="width: min-content;">Checkout</a>
     </div>
 </div>
 <div class="toast position-fixed bottom-0 start-0 p-2 fs-5 m-2 text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
@@ -70,5 +70,19 @@
     </div>
 </div>
 <script type="text/javascript" th:src="@{/js/cart.js}"></script>
+<script th:inline="javascript">
+/*<![CDATA[*/
+        var emptyCart = /*[[${!session.containsKey('shopping_cart') or session.shopping_cart.isEmpty()}]]*/;
+
+    $(function(){
+        if(emptyCart){
+            $("#checkout-btn").css("pointer-events", "none").css('background', "#548a71")
+        } else{
+            $("#checkout-btn").css("pointer-events", "auto").css('background', "#198754")
+        }
+    })
+
+/*]]>*/
+</script>
 </body>
 </html>
