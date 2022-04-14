@@ -2,7 +2,6 @@ package org.thesis.woodindustryecommerce.services.implementations;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -24,20 +23,58 @@ import java.util.Objects;
 @Service
 @Slf4j
 public class EmailSenderService {
-    @Autowired
     private JavaMailSender mailSender;
 
-    @Autowired
     private UserRepository userRepository;
 
-    @Autowired
     private SpringTemplateEngine templateEngine;
 
+    @Autowired
+    public EmailSenderService(JavaMailSender mailSender, UserRepository userRepository, SpringTemplateEngine templateEngine){
+        this.mailSender = mailSender;
+        this.userRepository = userRepository;
+        this.templateEngine = templateEngine;
+        
+        this.adminEmail = userRepository.findByUsername("admin").getEmail();
+        log.info(adminEmail);
+    }
+
+    private String adminEmail;
+
+    public void sendSimpleEmail(String email, String name, String text){
+        try{
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message,
+                    MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
+                    StandardCharsets.UTF_8.name());
+            helper.setTo(adminEmail);
+            helper.setText("User's email address: " + email + "\nUser's name: " + name + "\n\n" + text);
+            helper.setSubject("Contact Us");
+            mailSender.send(message);
+
+        } catch(MessagingException e){
+            e.printStackTrace();
+        }
+
+        log.debug("Contact Us email was sent by {}", name);
+    }
+
     public void sendProductReorderEmail(String productName, int reorderedAmount){
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo("admin@admin");
-        message.setSubject("Reordered product");
-        message.setText("The "+productName+" isn't in stock. It has been automatically reordered to have "+reorderedAmount + "pcs in stock!");
+        try{
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message,
+                    MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
+                    StandardCharsets.UTF_8.name());
+            helper.setTo(adminEmail);
+            helper.setText("The "+productName+" isn't in stock. It has been automatically reordered to have "+reorderedAmount + "pcs in stock!");
+            helper.setSubject("Reorder product");
+            mailSender.send(message);
+
+        } catch(MessagingException e){
+            e.printStackTrace();
+        }
+
+        log.debug("Reorder email was sent about '{}' product", productName);
     }
 
     public void sendTemplateEmail(Order order) {

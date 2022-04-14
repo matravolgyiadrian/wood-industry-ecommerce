@@ -23,6 +23,40 @@
         <a href="#" class="tw" title="Join us on Twitter"><i class="fab fa-twitter" aria-hidden="true"></i></a>
         <a href="#" class="insta" title="Join us on Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a>
     </div>
+    <h1 class="text-center p-4">Contact us</h1>
+    <form th:action="@{/contact}" method="post">
+        <div class="row justify-content-center">
+            <div class="form-group col-md-4"><label for="inputEmail">Email</label><input type="email" name="email" id="inputEmail" class="form-control"></div>
+            <div class="form-group col-md-4"><label for="inputName">Name</label><input type="text" name="name" id="inputName" class="form-control"></div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="form-group col-md-8 "><label for="inputText">Text</label><textarea name="message" id="inputText" cols="30" rows="5" class="form-control"></textarea></div>
+        </div>
+        <div class="row justify-content-center mt-5 mb-5"><button type="submit" class="btn btn-primary col-md-1">Send</button></div>
+    </form>
 </div>
+
+<div class="toast position-fixed bottom-0 start-0 p-2 fs-5 m-2 text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+    <div class="d-flex">
+        <div class="toast-body">
+            Email sent!
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+</div>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    
+        var successfulEmail = /*[[${successfulEmail}]]*/;
+        if(successfulEmail){
+            var toastElList = [].slice.call(document.querySelectorAll('.toast'));
+            var toastList = toastElList.map(function(toastEl) {
+                return new bootstrap.Toast(toastEl)
+            })
+            toastList.forEach(toast => toast.show());
+        }
+    
+    /*]]>*/
+    </script>
 </body>
 </html>
