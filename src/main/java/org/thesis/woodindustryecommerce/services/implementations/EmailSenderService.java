@@ -32,7 +32,7 @@ public class EmailSenderService {
     private String adminEmail;
 
     @Autowired
-    public EmailSenderService(JavaMailSender mailSender, UserRepository userRepository, SpringTemplateEngine templateEngine){
+    public EmailSenderService(JavaMailSender mailSender, UserRepository userRepository, SpringTemplateEngine templateEngine) {
         this.mailSender = mailSender;
         this.userRepository = userRepository;
         this.templateEngine = templateEngine;
