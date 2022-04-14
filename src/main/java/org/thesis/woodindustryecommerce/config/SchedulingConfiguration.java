@@ -26,7 +26,14 @@ public class SchedulingConfiguration implements SchedulingConfigurer {
 
     @Bean
     public TaskScheduler taskScheduler() {
-        ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
+        ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler() {
+            private static final long serialVersionUID = -1L;
+            @Override
+            public void destroy(){
+                this.getScheduledThreadPoolExecutor().setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
+                super.destroy();
+            }
+        };
         scheduler.setThreadNamePrefix("TaskScheduler");
         scheduler.setPoolSize(10);
         scheduler.setWaitForTasksToCompleteOnShutdown(true);
