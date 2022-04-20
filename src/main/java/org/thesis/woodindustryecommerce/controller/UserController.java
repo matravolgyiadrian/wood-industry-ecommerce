@@ -72,9 +72,10 @@ public class UserController {
 
     @GetMapping("/user/edit")
     public String editUser(Model model, Principal principal) {
-        model.addAttribute("userToEdit", userService.findByUsername(principal.getName()));
+        User userToEdit = userService.findByUsername(principal.getName());
+        model.addAttribute("userToEdit", userToEdit);
 
-        log.info("user to edit before edit: {}", userService.findByUsername(principal.getName()).toString());
+        log.info("user to edit before edit: {}", userToEdit.toString());
 
         return "edit_user";
     }
@@ -85,9 +86,10 @@ public class UserController {
         userToEdit.setUsername(principal.getName());
         log.info("User to edit form: {}", userToEdit);
 
-        if (userService.findByEmail(userToEdit.getEmail()) != null && !userService.findByUsername(principal.getName()).getEmail().equals(userToEdit.getEmail())) {
+        User loggedInUser = userService.findByUsername(principal.getName());
+        if (userService.findByEmail(userToEdit.getEmail()) != null && !loggedInUser.getEmail().equals(userToEdit.getEmail())) {
             model.addAttribute("emailExists", true);
-            model.addAttribute("userToEdit", userService.findByUsername(principal.getName()));
+            model.addAttribute("userToEdit", loggedInUser);
 
             return "edit_user";
         }

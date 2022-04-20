@@ -74,7 +74,7 @@ public class EmailSenderService {
         log.debug("Reorder email was sent about '{}' product", productName);
     }
 
-    public void sendTemplateEmail(Order order) {
+    public void sendCheckoutEmail(Order order) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message,

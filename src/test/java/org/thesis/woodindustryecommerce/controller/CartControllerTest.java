@@ -299,7 +299,7 @@ class CartControllerTest {
 
         //Then
         chair.setStock(98);
-        Mockito.verify(emailSenderService, Mockito.times(1)).sendTemplateEmail(order);
+        Mockito.verify(emailSenderService, Mockito.times(1)).sendCheckoutEmail(order);
         Mockito.verify(productService, Mockito.times(1)).save(chair);
         Mockito.verify(orderService, Mockito.times(1)).save(order);
     }
@@ -339,7 +339,7 @@ class CartControllerTest {
 
         //Then
         chair.setStock(98);
-        Mockito.verify(emailSenderService, Mockito.times(1)).sendTemplateEmail(order);
+        Mockito.verify(emailSenderService, Mockito.times(1)).sendCheckoutEmail(order);
         Mockito.verify(productService, Mockito.times(1)).save(chair);
         Mockito.verify(orderService, Mockito.times(1)).save(order);
     }

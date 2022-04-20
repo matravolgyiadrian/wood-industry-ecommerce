@@ -133,7 +133,7 @@ public class CartController {
 
         orderService.save(order);
 
-        emailSenderService.sendTemplateEmail(order);
+        emailSenderService.sendCheckoutEmail(order);
         cart.clear();
 
         redirectAttr.addFlashAttribute("successfulOrder", true);
