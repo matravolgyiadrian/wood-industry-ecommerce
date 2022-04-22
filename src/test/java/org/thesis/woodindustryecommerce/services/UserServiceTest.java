@@ -97,6 +97,7 @@ class UserServiceTest {
         //Given
         User jonDoe = User.builder().username("jondoe").fullName("Jon Doe").authorities(Set.of(new Role(0L, "ROLE_USER"))).email("jondoe@email").address("address").build();
         Mockito.when(userRepository.findByUsername("jondoe")).thenReturn(jonDoe);
+        Mockito.when(userRepository.findByUsername("admin")).thenReturn(jonDoe);
 
         //When
         User newUser = underTest.createUser(jonDoe, "ROLE_USER");
@@ -104,24 +105,42 @@ class UserServiceTest {
         //Then
         Assertions.assertEquals(jonDoe, newUser);
     }
-    @Test
 
+    @Test
     void testCreateUserShouldReturnNewUser_WhenThereIsntOneYet() {
         //Given
         Role user = new Role(1L, "ROLE_USER");
-        User jonDoe = User.builder().username("jondoe").password("password123").fullName("Jon Doe").email("jondoe@email").address("address").build();
+        Role adminRole = new Role(0L, "ROLE_ADMIN");
+        User jonDoe = User.builder().username("jondoe").password("password123").fullName("Jon Doe").authorities(Set.of(user)).email("jondoe@email").address("address").build();
+        User admin = User.builder().username("admin").password("admin").fullName("admin").authorities(Set.of(adminRole)).email("admin@email").address("address").build();
         Mockito.when(userRepository.findByUsername("jondoe")).thenReturn(null);
+        Mockito.when(userRepository.findByUsername("admin")).thenReturn(null);
         Mockito.when(roleRepository.findByAuthority("ROLE_USER")).thenReturn(user);
-        User newJonDoe = jonDoe;
-        newJonDoe.setAuthorities(Set.of(user));
-        newJonDoe.setPassword(bCryptPasswordEncoder.encode(jonDoe.getPassword()));
-        Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(newJonDoe);
+        Mockito.when(roleRepository.findByAuthority("ROLE_ADMIN")).thenReturn(adminRole);
+        Mockito.when(userRepository.save(jonDoe)).thenReturn(jonDoe);
+        Mockito.when(userRepository.save(admin)).thenReturn(admin);
 
         //When
         User newUser = underTest.createUser(jonDoe, "ROLE_USER");
+        User newAdmin = underTest.createUser(admin, "ROLE_ADMIN");
 
         //Then
-        Assertions.assertEquals(newJonDoe, newUser);
+        Assertions.assertEquals(jonDoe, newUser);
+        Assertions.assertEquals(admin, newAdmin);
+    }
+
+    @Test
+    void testCreateUserShouldThrowIlleagalArgumentException_WhenAuthorityDoesntExists(){
+//Given
+        Role user = new Role(1L, "ROLE_USER");
+        User jonDoe = User.builder().username("jondoe").password("password123").fullName("Jon Doe").authorities(Set.of(user)).email("jondoe@email").address("address").build();
+        Mockito.when(userRepository.findByUsername("jondoe")).thenReturn(null);
+
+        //When
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+           underTest.createUser(jonDoe, "USER");
+        });
+        //Then
     }
 
     @Test

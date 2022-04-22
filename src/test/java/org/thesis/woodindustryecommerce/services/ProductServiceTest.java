@@ -95,6 +95,14 @@ class ProductServiceTest {
                 .reorderThreshold(10)
                 .stopOrder(false)
                 .build());
+        Product productThree = underTest.save(Product.builder()
+                .name("Chair")
+                .price(10000)
+                .stock(100)
+                .image(new MockMultipartFile("foo", "".getBytes()))
+                .reorderThreshold(10)
+                .stopOrder(false)
+                .build());
 
         //Then
         Product expectedProductOne = productOne;
@@ -108,6 +116,14 @@ class ProductServiceTest {
                 .reorderThreshold(10)
                 .stopOrder(false)
                 .build(), productTwo);
+
+        Assertions.assertEquals(Product.builder()
+                .name("Chair")
+                .price(10000)
+                .stock(100)
+                .reorderThreshold(10)
+                .stopOrder(false)
+                .build(), productThree);
     }
 
     @Test

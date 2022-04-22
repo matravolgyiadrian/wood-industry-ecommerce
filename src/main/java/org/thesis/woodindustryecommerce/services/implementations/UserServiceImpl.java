@@ -11,6 +11,7 @@ import org.thesis.woodindustryecommerce.repository.RoleRepository;
 import org.thesis.woodindustryecommerce.repository.UserRepository;
 import org.thesis.woodindustryecommerce.services.UserService;
 
+import java.util.Locale;
 import java.util.Set;
 
 @Slf4j
@@ -102,6 +103,7 @@ public class UserServiceImpl implements UserService {
 
 
     private Role findAuthority(String userRoleStr) {
+        userRoleStr = userRoleStr.toUpperCase(Locale.ROOT);
         switch (userRoleStr) {
             case "ROLE_USER":
                 return roleRepository.findByAuthority("ROLE_USER");
