@@ -12,6 +12,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users")
+@NamedEntityGraph(name = "User.detail", attributeNodes = {@NamedAttributeNode("authorities")})
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,7 +34,7 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String address;
 
-    @ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER)
+    @ManyToMany(targetEntity = Role.class, fetch = FetchType.LAZY)
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
