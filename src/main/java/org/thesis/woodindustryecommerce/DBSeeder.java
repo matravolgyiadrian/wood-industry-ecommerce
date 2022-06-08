@@ -44,6 +44,7 @@ public class DBSeeder {
                 .stock(200)
                 .stopOrder(false)
                 .reorderThreshold(10)
+                .imageUrl("https://res.cloudinary.com/hlfoeju87/image/upload/v1637008986/izooujnou3npkswl5n0l.jpg")
                 .build();
         this.productRepository.save(chair);
 

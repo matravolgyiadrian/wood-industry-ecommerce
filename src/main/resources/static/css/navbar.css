@@ -71,6 +71,26 @@ button, button:focus{
     background-color: #62a794;
 }
 
+
+@media screen and (max-width: 1024px) {
+    .search-form {
+      width: 18rem;
+      
+    }
+  }
+  @media screen and (max-width: 768px) {
+    .search-form {
+      width: 12rem;
+      
+    }
+  }
+  @media screen and (max-width: 425px) {
+    .search-form {
+      width: 3rem;
+      
+    }
+  }
+
 #keyword {
     height: 2.5rem;
     border: 0;
